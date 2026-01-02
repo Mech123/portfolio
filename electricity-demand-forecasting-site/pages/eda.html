@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EDA • Electricity Demand Forecasting</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="topbar-title">
+      <div class="kicker">Electricity Demand Forecasting</div>
+      <div class="title">Exploratory Data Analysis</div>
+    </div>
+    <div class="topbar-badge">Insights</div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Electricity Demand Forecasting</div>
+        <div class="brand-sub">Germany-only case study</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="../index.html">🏠 Home</a>
+      <a class="nav-link" href="related-work.html">📚 Related Work</a>
+      <a class="nav-link" href="dataset.html">🧾 Dataset</a>
+      <a class="nav-link" href="preprocessing.html">🧹 Pre Processing</a>
+      <a class="nav-link active" href="eda.html">🔎 Exploratory Data Analysis</a>
+      <a class="nav-link" href="features.html">🧩 Feature Engineering</a>
+      <a class="nav-link" href="models.html">🤖 Models & Results</a>
+      <a class="nav-link" href="conclusion.html">✅ Conclusion</a>
+      <a class="nav-link" href="references.html">🔗 References</a>
+      <a class="nav-link" href="notebook.html">🧪 Process Notebook</a>
+
+      <div class="nav-divider"></div>
+      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small">© <span id="year"></span> Team</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="card">
+      <h1>Exploratory Data Analysis (EDA)</h1>
+      <p class="small">
+        EDA guides model selection and feature design, with a special focus on peak-load regimes.
+      </p>
+
+      <h2>Temporal Trends</h2>
+      <ul class="bullets">
+        <li>Daily and weekly patterns in electricity demand</li>
+        <li>Monthly/seasonal effects (winter vs summer)</li>
+        <li>Long-term changes and anomalies</li>
+      </ul>
+
+      <h2>Seasonality</h2>
+      <ul class="bullets">
+        <li>Decomposition to understand trend + seasonality + residual</li>
+        <li>Weekly and annual seasonality strength (important for SARIMA orders)</li>
+      </ul>
+
+      <h2>Correlation & Weather Effects</h2>
+      <ul class="bullets">
+        <li>Relationship between load and temperature</li>
+        <li>Effects of wind/solar and weather-driven changes</li>
+      </ul>
+
+      <h2>Peak-Load Focus (Core)</h2>
+      <ul class="bullets">
+        <li>Define peak threshold: e.g., <b>90th percentile</b> of load in test period</li>
+        <li>Compare peak vs normal hours across time-of-day and seasons</li>
+        <li>Prepare error diagnostics: error vs load level, peak-only error distribution</li>
+      </ul>
+
+      <div class="callout">
+        Add plots from your notebook here: seasonal decomposition, heatmaps, peak-hour distribution, etc.
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/app.js"></script>
+</body>
+</html>

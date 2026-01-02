@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Models & Results • Electricity Demand Forecasting</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="topbar-title">
+      <div class="kicker">Electricity Demand Forecasting</div>
+      <div class="title">Models & Results</div>
+    </div>
+    <div class="topbar-badge">Comparison</div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Electricity Demand Forecasting</div>
+        <div class="brand-sub">Germany-only case study</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="../index.html">🏠 Home</a>
+      <a class="nav-link" href="related-work.html">📚 Related Work</a>
+      <a class="nav-link" href="dataset.html">🧾 Dataset</a>
+      <a class="nav-link" href="preprocessing.html">🧹 Pre Processing</a>
+      <a class="nav-link" href="eda.html">🔎 Exploratory Data Analysis</a>
+      <a class="nav-link" href="features.html">🧩 Feature Engineering</a>
+      <a class="nav-link active" href="models.html">🤖 Models & Results</a>
+      <a class="nav-link" href="conclusion.html">✅ Conclusion</a>
+      <a class="nav-link" href="references.html">🔗 References</a>
+      <a class="nav-link" href="notebook.html">🧪 Process Notebook</a>
+
+      <div class="nav-divider"></div>
+      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small">© <span id="year"></span> Team</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="card">
+      <h1>Models & Results</h1>
+      <p class="small">
+        We compare four pipelines for short-term demand forecasting (30 min to 1 hour ahead) and evaluate both
+        overall accuracy and peak-hour stability.
+      </p>
+
+      <h2>1) SARIMA (Statistical baseline)</h2>
+      <ul class="bullets">
+        <li>Captures seasonality and trend in the demand series</li>
+        <li>Rolling-origin backtesting and residual diagnostics (ACF/PACF, Ljung–Box)</li>
+        <li>Model selection via AIC/BIC</li>
+      </ul>
+
+      <h2>2) LSTM (Deep learning)</h2>
+      <ul class="bullets">
+        <li>Learns nonlinear interactions between load history, weather and calendar features</li>
+        <li>Sliding-window sequences, validation-based tuning, learning curves</li>
+      </ul>
+
+      <h2>3) Hybrid SARIMA + LSTM (Residual learning)</h2>
+      <ul class="bullets">
+        <li>Train SARIMA → compute residuals (actual − SARIMA)</li>
+        <li>Train LSTM to predict residuals using exogenous inputs</li>
+        <li>Final forecast = SARIMA forecast + predicted residual</li>
+      </ul>
+
+      <h2>4) Ensemble (SARIMA + LSTM)</h2>
+      <ul class="bullets">
+        <li>Combine forecasts via weighted averaging (weights from validation performance)</li>
+        <li>Goal: reduce variance and improve robustness during peaks</li>
+      </ul>
+
+      <h2>Evaluation Metrics</h2>
+      <ul class="bullets">
+        <li><b>Overall:</b> MAE, RMSE, sMAPE</li>
+        <li><b>Peak-focused:</b> MAE_peak, RMSE_peak where load ≥ 90th percentile</li>
+        <li><b>Compute:</b> training time, inference latency</li>
+      </ul>
+
+      <div class="callout">
+        Add your results table here (model vs MAE/RMSE overall + peak) once experiments finish.
+      </div>
+    </section>
+  </main>
+
+  <script src="../assets/app.js"></script>
+</body>
+</html>

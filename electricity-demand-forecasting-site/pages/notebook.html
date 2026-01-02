@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Process Notebook • Electricity Demand Forecasting</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="topbar-title">
+      <div class="kicker">Electricity Demand Forecasting</div>
+      <div class="title">Process Notebook</div>
+    </div>
+    <div class="topbar-badge">Artifacts</div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Electricity Demand Forecasting</div>
+        <div class="brand-sub">Bathula Veera • Gagan • Pinky</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="../index.html">🏠 Home</a>
+      <a class="nav-link" href="related-work.html">📚 Related Work</a>
+      <a class="nav-link" href="dataset.html">🧾 Dataset</a>
+      <a class="nav-link" href="preprocessing.html">🧹 Pre Processing</a>
+      <a class="nav-link" href="eda.html">🔎 Exploratory Data Analysis</a>
+      <a class="nav-link" href="features.html">🧩 Feature Engineering</a>
+      <a class="nav-link" href="models.html">🤖 Models & Results</a>
+      <a class="nav-link" href="conclusion.html">✅ Conclusion</a>
+      <a class="nav-link" href="references.html">🔗 References</a>
+      <a class="nav-link active" href="notebook.html">🧪 Process Notebook</a>
+
+      <div class="nav-divider"></div>
+      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small">© <span id="year"></span> Team</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="card">
+      <h1>Process Notebook</h1>
+      <p class="small">
+        This page documents the experimental workflow and links to notebooks and scripts in the repository.
+      </p>
+
+      <h2>Planned Notebooks</h2>
+      <ul class="bullets">
+        <li><b>01_eda.ipynb</b> — EDA, seasonality, peak regime analysis</li>
+        <li><b>02_sarima_baseline.ipynb</b> — SARIMA tuning + diagnostics + backtesting</li>
+        <li><b>03_lstm_model.ipynb</b> — LSTM pipeline + training curves</li>
+        <li><b>04_hybrid_and_ensemble.ipynb</b> — hybrid residual learning + ensemble weighting</li>
+        <li><b>05_xai_analysis.ipynb</b> — SHAP + LIME interpretability</li>
+      </ul>
+
+      <h2>Repository Structure</h2>
+      <pre class="small" style="white-space:pre-wrap; border:1px solid rgba(255,255,255,.08); padding:12px; border-radius:12px; background:rgba(255,255,255,.02);">
+.
+├── data/
+│   ├── raw/
+│   ├── processed/
+│   └── external/
+├── notebooks/
+│   ├── 01_eda.ipynb
+│   ├── 02_sarima_baseline.ipynb
+│   ├── 03_lstm_model.ipynb
+│   ├── 04_hybrid_and_ensemble.ipynb
+│   └── 05_xai_analysis.ipynb
+├── src/
+│   ├── data_preprocessing.py
+│   ├── features.py
+│   ├── models/
+│   │   ├── sarima.py
+│   │   ├── lstm.py
+│   │   ├── hybrid.py
+│   │   └── ensemble.py
+│   ├── evaluation.py
+│   └── xai/
+│       ├── shap_utils.py
+│       └── lime_utils.py
+└── README.md
+      </pre>
+    </section>
+  </main>
+
+  <script src="../assets/app.js"></script>
+</body>
+</html>

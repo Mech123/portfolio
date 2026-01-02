@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Electricity Demand Forecasting • Project Website</title>
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="topbar-title">
+      <div class="kicker">Project Website</div>
+      <div class="title">Electricity Demand Forecasting (Germany)</div>
+    </div>
+    <div class="topbar-badge">Ready to deploy</div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Electricity Demand Forecasting</div>
+        <div class="brand-sub">Bathula Veera • Gagan • Pinky</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link active" href="index.html">🏠 Home</a>
+      <a class="nav-link" href="pages/related-work.html">📚 Related Work</a>
+      <a class="nav-link" href="pages/dataset.html">🧾 Dataset</a>
+      <a class="nav-link" href="pages/preprocessing.html">🧹 Pre Processing</a>
+      <a class="nav-link" href="pages/eda.html">🔎 Exploratory Data Analysis</a>
+      <a class="nav-link" href="pages/features.html">🧩 Feature Engineering</a>
+      <a class="nav-link" href="pages/models.html">🤖 Models & Results</a>
+      <a class="nav-link" href="pages/conclusion.html">✅ Conclusion</a>
+      <a class="nav-link" href="pages/references.html">🔗 References</a>
+      <a class="nav-link" href="pages/notebook.html">🧪 Process Notebook</a>
+
+      <div class="nav-divider"></div>
+
+      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small">© <span id="year"></span> Team • Germany-only case study</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Team Introduction</h1>
+        <p class="lead">
+          Comparative study of <b>SARIMA</b>, <b>LSTM</b>, <b>Hybrid SARIMA+LSTM</b>, and <b>Ensemble</b> approaches for
+          short-term electricity demand forecasting (30 minutes to 1 hour ahead), with a special focus on
+          <b>peak-load stability</b> and <b>model explainability</b> (SHAP, LIME).
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn primary" href="pages/dataset.html">Explore Dataset</a>
+          <a class="btn" href="pages/models.html">See Models</a>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <div class="hero-card">
+          <div class="hero-card-title"><b>Project Screencast</b></div>
+          <p class="small">Not available yet (button auto-hides until you add link).</p>
+          <div id="screencastWrap">
+            <a class="btn small-btn" href="#" id="screencastLink">▶ Open Video</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card">
+        <h2>Process Flow (Data Science Lifecycle)</h2>
+        <p class="small">
+          We follow a standard lifecycle, and explicitly evaluate model stability during peak-load hours.
+        </p>
+
+        <ol class="stepper">
+          <li><span>1</span> Business Understanding</li>
+          <li><span>2</span> Data Collection</li>
+          <li><span>3</span> Data Preparation</li>
+          <li><span>4</span> Exploratory Analysis</li>
+          <li><span>5</span> Model Building</li>
+          <li><span>6</span> Model Evaluation</li>
+          <li><span>7</span> Model Deployment (planned)</li>
+          <li><span>8</span> Model Maintenance (planned)</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2>Quick Summary</h2>
+        <ul class="bullets">
+          <li><b>Goal:</b> accurate + stable demand forecasts for grid operations (Germany).</li>
+          <li><b>Data:</b> OPSD time series (load + generation + weather + calendar).</li>
+          <li><b>Models:</b> SARIMA baseline, LSTM nonlinear model, Hybrid residual learning, Ensemble averaging.</li>
+          <li><b>Peak focus:</b> evaluate errors for <b>all hours</b> vs <b>peak hours</b> (≥ 90th percentile load).</li>
+          <li><b>XAI:</b> SHAP/LIME explanations to improve trust and debugging.</li>
+        </ul>
+
+        <div class="callout">
+          Once you add plots/tables from notebooks, this website becomes a strong portfolio project.
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Team Members</h2>
+      <p class="small">Replace images inside <code>assets/images/</code> (member1.jpg, member2.jpg, member3.jpg).</p>
+
+      <div class="team">
+        <article class="person">
+          <img src="assets/images/member1.jpg" alt="Bathula Veera" />
+          <div>
+            <h3>Bathula Veera</h3>
+            <p class="small">Data preparation • EDA • Documentation</p>
+            <div class="tags"><span>Python</span><span>Time Series</span><span>EDA</span></div>
+          </div>
+        </article>
+
+        <article class="person">
+          <img src="assets/images/member2.jpg" alt="Gagan" />
+          <div>
+            <h3>Gagan</h3>
+            <p class="small">SARIMA • Backtesting • Diagnostics</p>
+            <div class="tags"><span>SARIMA</span><span>AIC/BIC</span><span>ACF/PACF</span></div>
+          </div>
+        </article>
+
+        <article class="person">
+          <img src="assets/images/member3.jpg" alt="Pinky" />
+          <div>
+            <h3>Pinky</h3>
+            <p class="small">LSTM • Hybrid/Ensemble • Explainability</p>
+            <div class="tags"><span>LSTM</span><span>SHAP</span><span>LIME</span></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="small">Deploy on GitHub Pages / Netlify as a static site.</div>
+    </footer>
+  </main>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

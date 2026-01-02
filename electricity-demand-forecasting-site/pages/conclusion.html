@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conclusion • Electricity Demand Forecasting</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="topbar-title">
+      <div class="kicker">Electricity Demand Forecasting</div>
+      <div class="title">Conclusion</div>
+    </div>
+    <div class="topbar-badge">Summary</div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Electricity Demand Forecasting</div>
+        <div class="brand-sub">Germany-only case study</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="../index.html">🏠 Home</a>
+      <a class="nav-link" href="related-work.html">📚 Related Work</a>
+      <a class="nav-link" href="dataset.html">🧾 Dataset</a>
+      <a class="nav-link" href="preprocessing.html">🧹 Pre Processing</a>
+      <a class="nav-link" href="eda.html">🔎 Exploratory Data Analysis</a>
+      <a class="nav-link" href="features.html">🧩 Feature Engineering</a>
+      <a class="nav-link" href="models.html">🤖 Models & Results</a>
+      <a class="nav-link active" href="conclusion.html">✅ Conclusion</a>
+      <a class="nav-link" href="references.html">🔗 References</a>
+      <a class="nav-link" href="notebook.html">🧪 Process Notebook</a>
+
+      <div class="nav-divider"></div>
+      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small">© <span id="year"></span> Team</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="card">
+      <h1>Conclusion</h1>
+      <p class="small">
+        This project compares SARIMA, LSTM, hybrid SARIMA+LSTM, and ensemble methods for short-term electricity
+        demand forecasting in Germany, with a special focus on peak-load stability and interpretability.
+      </p>
+
+      <h2>Key Takeaways (Expected)</h2>
+      <ul class="bullets">
+        <li><b>SARIMA</b> is a strong interpretable baseline with low compute cost.</li>
+        <li><b>LSTM</b> learns nonlinear effects but needs explainability for operational trust.</li>
+        <li><b>Hybrid SARIMA+LSTM</b> can improve peak accuracy by modeling nonlinear residuals.</li>
+        <li><b>Ensembles</b> can reduce error variance and improve stability during peaks.</li>
+        <li><b>SHAP/LIME</b> helps validate which features drive predictions (peak vs normal hours).</li>
+      </ul>
+
+      <h2>Next Steps</h2>
+      <ul class="bullets">
+        <li>Add prediction intervals / uncertainty estimation</li>
+        <li>Run robustness checks across seasons and special days</li>
+        <li>Publish a small dashboard for operational interpretation</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="../assets/app.js"></script>
+</body>
+</html>

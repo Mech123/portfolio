@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dataset • Electricity Demand Forecasting</title>
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="topbar-title">
+      <div class="kicker">Electricity Demand Forecasting</div>
+      <div class="title">Dataset</div>
+    </div>
+    <div class="topbar-badge">OPSD</div>
+  </header>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-dot"></div>
+      <div>
+        <div class="brand-title">Electricity Demand Forecasting</div>
+        <div class="brand-sub">Germany-only case study</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-link" href="../index.html">🏠 Home</a>
+      <a class="nav-link" href="related-work.html">📚 Related Work</a>
+      <a class="nav-link active" href="dataset.html">🧾 Dataset</a>
+      <a class="nav-link" href="preprocessing.html">🧹 Pre Processing</a>
+      <a class="nav-link" href="eda.html">🔎 Exploratory Data Analysis</a>
+      <a class="nav-link" href="features.html">🧩 Feature Engineering</a>
+      <a class="nav-link" href="models.html">🤖 Models & Results</a>
+      <a class="nav-link" href="conclusion.html">✅ Conclusion</a>
+      <a class="nav-link" href="references.html">🔗 References</a>
+      <a class="nav-link" href="notebook.html">🧪 Process Notebook</a>
+
+      <div class="nav-divider"></div>
+      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small">© <span id="year"></span> Team</div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <section class="card">
+      <h1>Dataset</h1>
+      <p class="small">
+        We use the Open Power System Data (OPSD) time-series dataset and focus on <b>Germany</b> for
+        short-horizon demand forecasting (30 minutes to 1 hour ahead).
+      </p>
+
+      <h2>Source</h2>
+      <ul class="bullets">
+        <li><b>Dataset:</b> OPSD – Time Series (Version 2020-10-06)</li>
+        <li><b>Coverage:</b> ~35 European countries (we use Germany only)</li>
+        <li><b>Frequency:</b> hourly (some series may include sub-hourly entries)</li>
+        <li><b>Format:</b> CSV/Parquet with standardized metadata</li>
+      </ul>
+
+      <h2>Key Variables</h2>
+      <ul class="bullets">
+        <li><b>Load:</b> electricity demand (actual; forecasted if available)</li>
+        <li><b>Generation:</b> solar/wind/hydro/conventional</li>
+        <li><b>Weather:</b> temperature, wind speed, solar radiation, cloud cover (if available)</li>
+        <li><b>Calendar:</b> timestamps, weekday/weekend, holidays (derived)</li>
+      </ul>
+
+      <h2>Forecasting Target</h2>
+      <ul class="bullets">
+        <li>Predict demand at <b>t + 30 min</b> and <b>t + 1 hour</b> horizons</li>
+        <li>Evaluate both <b>all hours</b> and <b>peak hours</b> regimes</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="../assets/app.js"></script>
+</body>
+</html>
