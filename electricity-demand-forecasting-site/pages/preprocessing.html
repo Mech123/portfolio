@@ -1,94 +1,64 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pre Processing • Electricity Demand Forecasting</title>
-  <link rel="stylesheet" href="../assets/style.css" />
+  <meta charset="utf-8">
+  <title>Pre Processing</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
 </head>
 
 <body>
-  <header class="topbar">
-    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
-    <div class="topbar-title">
-      <div class="kicker">Electricity Demand Forecasting</div>
-      <div class="title">Pre Processing</div>
-    </div>
-    <div class="topbar-badge">Pipeline</div>
-  </header>
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn"><i class="bi bi-list"></i></button>
+  </div>
+  <div class="topbar-center">Electricity Demand Forecasting (Germany)</div>
+</header>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-dot"></div>
-      <div>
-        <div class="brand-title">Electricity Demand Forecasting</div>
-        <div class="brand-sub">Germany-only case study</div>
-      </div>
-    </div>
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    Electricity Demand Forecasting
+    <div class="brand-sub">Bathula Veera • Gagan • Pinky</div>
+  </div>
 
-    <nav class="nav">
-      <a class="nav-link" href="../index.html">🏠 Home</a>
-      <a class="nav-link" href="related-work.html">📚 Related Work</a>
-      <a class="nav-link" href="dataset.html">🧾 Dataset</a>
-      <a class="nav-link active" href="preprocessing.html">🧹 Pre Processing</a>
-      <a class="nav-link" href="eda.html">🔎 Exploratory Data Analysis</a>
-      <a class="nav-link" href="features.html">🧩 Feature Engineering</a>
-      <a class="nav-link" href="models.html">🤖 Models & Results</a>
-      <a class="nav-link" href="conclusion.html">✅ Conclusion</a>
-      <a class="nav-link" href="references.html">🔗 References</a>
-      <a class="nav-link" href="notebook.html">🧪 Process Notebook</a>
+  <nav class="nav">
+    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link active"><i class="bi bi-sliders"></i> Pre Processing</a>
+  </nav>
+</aside>
 
-      <div class="nav-divider"></div>
-      <a class="nav-link" href="#" id="githubLink">💻 Git Repository</a>
-    </nav>
+<main class="content">
+<section class="card">
+<h1>Pre Processing</h1>
 
-    <div class="sidebar-footer">
-      <div class="small">© <span id="year"></span> Team</div>
-    </div>
-  </aside>
+<p class="muted">
+This preprocessing pipeline prepares OPSD electricity demand and weather data for time-series
+forecasting models.
+</p>
 
-  <main class="content">
-    <section class="card">
-      <h1>Pre Processing</h1>
-      <p class="small">
-        We build a consistent time-series dataset for forecasting and prevent leakage by preserving time order.
-      </p>
+<h2>Steps Performed</h2>
+<ul>
+<li>Loaded OPSD time-series data at hourly resolution.</li>
+<li>Merged population-weighted weather data for Germany.</li>
+<li>Reindexed timestamps to ensure continuous time series.</li>
+<li>Detected outliers using IQR and Z-score methods.</li>
+<li>Handled missing values using interpolation and forward/back filling.</li>
+<li>Generated calendar-based and lagged features.</li>
+<li>Normalized numerical features for model stability.</li>
+<li>Exported cleaned datasets for modeling.</li>
+</ul>
 
-      <h2>1) Time Handling</h2>
-      <ul class="bullets">
-        <li>Ensure a continuous timestamp index</li>
-        <li>Handle missing timestamps and irregular intervals</li>
-        <li>Unify timezone representation (consistent UTC or chosen time base)</li>
-      </ul>
+<h2>Notebook</h2>
+<p>
+<a class="link" target="_blank"
+href="https://github.com/Mech123/dswp_group2/tree/main">
+View preprocessing notebook on GitHub
+</a>
+</p>
 
-      <h2>2) Cleaning & Imputation</h2>
-      <ul class="bullets">
-        <li>Fill gaps in load/weather series (method depends on gap length)</li>
-        <li>Remove or flag extreme outliers (data issues vs true peaks)</li>
-        <li>Create a missingness report per feature and time period</li>
-      </ul>
+</section>
+</main>
 
-      <h2>3) Feature Engineering</h2>
-      <ul class="bullets">
-        <li>Lagged load features (t−1, t−24, t−168)</li>
-        <li>Weather features (and optionally lags)</li>
-        <li>Calendar features (hour, weekday, weekend, season, holidays)</li>
-      </ul>
-
-      <h2>4) Normalization / Scaling</h2>
-      <ul class="bullets">
-        <li>Scale numeric features for LSTM training</li>
-        <li>Keep SARIMA target consistent; invert transforms for evaluation</li>
-      </ul>
-
-      <h2>5) Merging & Splits</h2>
-      <ul class="bullets">
-        <li>Join load + generation + weather into a unified table</li>
-        <li>Use time-based train/validation/test splits (no shuffling)</li>
-      </ul>
-    </section>
-  </main>
-
-  <script src="../assets/app.js"></script>
+<script src="../assets/app.js"></script>
 </body>
 </html>
