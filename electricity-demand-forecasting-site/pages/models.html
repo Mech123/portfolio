@@ -189,7 +189,7 @@
           <h3 class="model-title"><i class="bi bi-diagram-2"></i> Ensemble</h3>
           <span class="badge">Combination</span>
         </div>
-        <p class="model-desc">Evaluation table includes ensemble variants (FINAL_SWITCH_RESIDUAL, ENS_NNLS, etc.).</p>
+        <p class="model-desc">Ensemble forecasting is implemented by aligning SARIMA, LSTM, and Hybrid predictions by timestamp and comparing multiple combination strategies.</p>
         <div class="cta-row">
           <a class="btn" href="model_ensemble.html"><i class="bi bi-box-arrow-up-right"></i> Open page</a>
         </div>
@@ -197,7 +197,7 @@
     </div>
 
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Summary (based on evaluation table)</h2>
+      <h2 style="margin:0 0 8px;">Summary</h2>
       <p class="muted" style="margin:0;">
         Based on the combined evaluation table, the best overall choice is FINAL_SWITCH_RESIDUAL because it has the
         lowest overall errors (Overall_MAE 520.0, Overall_RMSE 672.2) with the highest overall fit (Overall_R² 0.9949),
@@ -214,8 +214,6 @@
   </section>
 
   <section class="card">
-    <h2>Overview metrics (evaluation) – full table</h2>
-    <p class="muted-small">Embedded evaluation table (no CSV auto-loading).</p>
 
     <div class="table-wrap">
       <table class="metrics-wide" aria-label="Evaluation metrics table">

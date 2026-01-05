@@ -152,7 +152,7 @@
     </div>
 
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Model summary (from your notebook code)</h2>
+      <h2 style="margin:0 0 8px;">Model summary</h2>
       <p class="muted" style="margin:0;">
         LSTM is implemented for hourly electricity demand forecasting using the processed dataset with utc_timestamp as the datetime index and target_load as the prediction target, while all remaining variables are used as input features. A strict time-based split is applied, with training on data from 2015–2017 and evaluation on 2018, and the training set is further divided into training and validation subsets. Input features are scaled using RobustScaler and the target using MinMaxScaler, and temporal dependencies are captured using 24-hour sliding input sequences. The model uses a stacked LSTM architecture with two layers (64 and 32 units), followed by dense layers with dropout regularization, and is trained with the Adam optimizer and mean squared error loss, using early stopping and learning-rate reduction for stability. The model generates hourly forecasts for the test period, compares predicted and actual demand, analyzes residual and peak-load behavior, and evaluates performance using standard metrics such as MAE, RMSE, MAPE/sMAPE, bias, and R².
       </p>
@@ -161,13 +161,10 @@
 
   <section class="card">
     <h2>Metrics</h2>
-    <p class="muted" style="margin-top:6px;">
-      Metrics are taken from your LSTM files: <code>metrics.json</code> and computed from <code>lstm_predictions.csv</code>.
-    </p>
-
+	
     <div class="grid-2">
       <div class="panel">
-        <h3 style="margin:0 0 6px;">Computed from predictions CSV</h3>
+        <h3 style="margin:0 0 6px;">Predictions</h3>
         <div id="csvState" class="muted">Loading CSV metrics…</div>
 
         <div class="kpi-grid" id="csvKpis" style="display:none;">
@@ -184,7 +181,7 @@
       </div>
 
       <div class="panel">
-        <h3 style="margin:0 0 6px;">Loaded from metrics.json</h3>
+        <h3 style="margin:0 0 6px;">Metrics</h3>
         <div id="metricsState" class="muted">Loading metrics…</div>
 
         <table class="metrics" id="metricsTable" style="display:none;">

@@ -134,7 +134,6 @@
     </div>
 
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">What is included</h2>
       <p class="muted" style="margin:0;">
         Ensemble forecasting is implemented by aligning SARIMA, LSTM, and Hybrid predictions by timestamp and comparing multiple combination strategies. It evaluates simple averaging baselines (mean/median) and then applies stacking with linear models: Ridge-based stacking (with and without intercept) and a non-negative least squares (NNLS) setup to derive interpretable convex weights. Performance is measured both overall and specifically on peak demand periods defined by a 90th-percentile (p90) threshold. In addition, a residual-correction ensemble learns the LSTM residual using SARIMA and Hybrid predictions as inputs, producing an adjusted forecast (LSTM + predicted residual). Finally, a regime-switching ensemble chooses between the plain LSTM and the residual-corrected LSTM depending on whether demand is above the p90 threshold, targeting better peak accuracy without sacrificing overall performance.
       </p>
