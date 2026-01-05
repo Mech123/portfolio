@@ -9,70 +9,110 @@
   <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
-    .model-grid{
+    .models-grid{
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap:14px;
-      margin-top: 12px;
+      margin-top:14px;
     }
+    @media (max-width: 1200px){ .models-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 760px){ .models-grid{ grid-template-columns: 1fr; } }
+
     .model-card{
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:14px;
-      background:#fff;
+      display:block;
       text-decoration:none;
-      color:inherit;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fff;
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      min-height: 170px;
     }
-    .model-card:hover{ box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
-    .model-top{
+    .model-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+      border-color: rgba(0,0,0,.08);
+    }
+    .model-card::before{
+      content:"";
+      position:absolute;
+      left:0; top:0;
+      width:100%;
+      height:6px;
+      opacity:.95;
+    }
+    .model-card.sarima::before{ background: linear-gradient(90deg,#2563eb,#60a5fa); }
+    .model-card.lstm::before{ background: linear-gradient(90deg,#16a34a,#86efac); }
+    .model-card.hybrid::before{ background: linear-gradient(90deg,#7c3aed,#c4b5fd); }
+    .model-card.ensemble::before{ background: linear-gradient(90deg,#f59e0b,#fde68a); }
+
+    .model-head{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:space-between;
       gap:10px;
+      margin-top:4px;
     }
-    .model-name{
-      margin:0;
+    .model-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
       font-size: 18px;
       font-weight: 700;
-      display:flex;
-      gap:10px;
-      align-items:center;
+      margin:0;
     }
     .pill{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#f9fafb;
-      font-size:12px;
+      gap:6px;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
       color: var(--text-muted);
-      width: fit-content;
+      background:#fff;
+      white-space:nowrap;
     }
-    .model-desc{ margin:0; color: var(--text-muted); line-height: 1.45; }
-    .model-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top: 10px;
+    .model-desc{
+      margin:10px 0 0;
+      color: var(--text-muted);
+      line-height:1.45;
     }
-    .btn-sm{
+    .go{
+      margin-top:12px;
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:#fff;
-      text-decoration:none;
-      color:inherit;
-      font-size: 13px;
+      font-weight:600;
     }
-    .btn-sm:hover{ background:#f9fafb; }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+    @media (max-width: 980px){ .summary-grid{ grid-template-columns: 1fr; } }
+
+    .summary-card{
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background:#fff;
+      padding: 14px;
+    }
+    .summary-card h3{
+      margin:0 0 8px;
+      font-size: 16px;
+    }
+    .summary-list{
+      margin:0;
+      padding-left:18px;
+      color: var(--text-muted);
+    }
+    .summary-list li{ margin: 6px 0; }
   </style>
 </head>
 
@@ -115,66 +155,96 @@
   <section class="card">
     <h1>Models & Results</h1>
     <p class="muted">
-      Each model has its own page with metrics (JSON), predictions (CSV), and plots (PNG).
-      Keeping model assets isolated avoids filename conflicts and makes the site easier to navigate.
+      We compared four approaches: SARIMA, LSTM, Hybrid (SARIMA + LSTM residual), and Ensemble.
+      Each model has its own page with metrics, predictions, and plots.
     </p>
 
-    <div class="model-grid">
-      <a class="model-card" href="model_sarima.html">
-        <div class="model-top">
-          <h2 class="model-name"><i class="bi bi-graph-up"></i> SARIMA</h2>
+    <div class="models-grid">
+      <a class="model-card sarima" href="model_sarima.html" aria-label="Open SARIMA page">
+        <div class="model-head">
+          <h2 class="model-title"><i class="bi bi-graph-up"></i> SARIMA</h2>
           <span class="pill">Classical • Seasonal</span>
         </div>
-        <p class="model-desc">
-          Seasonal ARIMA baseline for hourly demand forecasting. Strong at stable seasonality, weaker at sharp peaks.
-        </p>
-        <div class="model-actions">
-          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/sarima</span>
-          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/sarima</span>
-        </div>
+        <p class="model-desc">Seasonal ARIMA baseline for hourly demand forecasting.</p>
+        <span class="go"><i class="bi bi-arrow-right"></i> Open SARIMA</span>
       </a>
 
-      <a class="model-card" href="model_lstm.html">
-        <div class="model-top">
-          <h2 class="model-name"><i class="bi bi-cpu"></i> LSTM</h2>
+      <a class="model-card lstm" href="model_lstm.html" aria-label="Open LSTM page">
+        <div class="model-head">
+          <h2 class="model-title"><i class="bi bi-cpu"></i> LSTM</h2>
           <span class="pill">Deep Learning</span>
         </div>
-        <p class="model-desc">
-          Sequence model learning non-linear patterns from history. Includes training history and prediction plots.
-        </p>
-        <div class="model-actions">
-          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/lstm</span>
-          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/lstm</span>
-        </div>
+        <p class="model-desc">Sequence model learning nonlinear temporal dependencies.</p>
+        <span class="go"><i class="bi bi-arrow-right"></i> Open LSTM</span>
       </a>
 
-      <a class="model-card" href="model_hybrid.html">
-        <div class="model-top">
-          <h2 class="model-name"><i class="bi bi-layers"></i> Hybrid</h2>
+      <a class="model-card hybrid" href="model_hybrid.html" aria-label="Open Hybrid page">
+        <div class="model-head">
+          <h2 class="model-title"><i class="bi bi-layers"></i> Hybrid</h2>
           <span class="pill">SARIMA + LSTM Residual</span>
         </div>
-        <p class="model-desc">
-          Combines SARIMA base forecast with LSTM residual learning to improve peaks and regime changes.
-        </p>
-        <div class="model-actions">
-          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/hybrid</span>
-          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/hybrid</span>
-        </div>
+        <p class="model-desc">SARIMA forecast + LSTM residual model.</p>
+        <span class="go"><i class="bi bi-arrow-right"></i> Open Hybrid</span>
       </a>
 
-      <a class="model-card" href="model_ensemble.html">
-        <div class="model-top">
-          <h2 class="model-name"><i class="bi bi-diagram-3"></i> Ensemble</h2>
+      <a class="model-card ensemble" href="model_ensemble.html" aria-label="Open Ensemble page">
+        <div class="model-head">
+          <h2 class="model-title"><i class="bi bi-diagram-2"></i> Ensemble</h2>
           <span class="pill">Combination</span>
         </div>
-        <p class="model-desc">
-          Aggregates predictions from multiple models (e.g., weighted combination) for robustness and stability.
-        </p>
-        <div class="model-actions">
-          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/ensemble</span>
-          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/ensemble</span>
-        </div>
+        <p class="model-desc">Aggregates predictions from multiple models.</p>
+        <span class="go"><i class="bi bi-arrow-right"></i> Open Ensemble</span>
       </a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Notebook / Evaluation summary (extracted)</h2>
+
+    <div class="summary-grid">
+      <div class="summary-card">
+        <h3>SARIMA</h3>
+        <ul class="summary-list">
+          <li>Overall MAE: 13,785.069</li>
+          <li>Overall RMSE: 15,502.139</li>
+          <li>Overall MAPE (%): 24.317</li>
+          <li>Overall sMAPE (%): 28.505</li>
+        </ul>
+      </div>
+
+      <div class="summary-card">
+        <h3>LSTM</h3>
+        <ul class="summary-list">
+          <li>Overall MAE: 521.314</li>
+          <li>Overall RMSE: 674.659</li>
+          <li>Overall MAPE (%): 0.976</li>
+          <li>Overall sMAPE (%): 0.975</li>
+          <li>Peak MAE: 611.755 • Peak RMSE: 844.671</li>
+        </ul>
+      </div>
+
+      <div class="summary-card">
+        <h3>Hybrid</h3>
+        <ul class="summary-list">
+          <li>Overall MAE: 22,375.808</li>
+          <li>Overall RMSE: 23,607.357</li>
+          <li>Overall MAPE (%): 40.466</li>
+          <li>Overall sMAPE (%): 51.852</li>
+        </ul>
+      </div>
+
+      <div class="summary-card">
+        <h3>Ensemble</h3>
+        <ul class="summary-list">
+          <li><b>FINAL_SWITCH_RESIDUAL</b> — Overall MAE: 520.004 • RMSE: 672.238 • Peak MAE: 598.708 • Peak RMSE: 825.228</li>
+          <li><b>ENS_NNLS</b> — Overall MAE: 521.314 • RMSE: 674.659 • Peak MAE: 611.755 • Peak RMSE: 844.671</li>
+          <li><b>ENS_RESIDUAL_LSTM</b> — Overall MAE: 677.403 • RMSE: 844.527 • Peak MAE: 548.478 • Peak RMSE: 707.845</li>
+          <li><b>ENS_WEIGHTED_RIDGE</b> — Overall MAE: 714.008 • RMSE: 903.807 • Peak MAE: 599.624 • Peak RMSE: 771.685</li>
+          <li><b>ENS_STACK_RIDGE</b> — Overall MAE: 782.643 • RMSE: 966.227 • Peak MAE: 884.647 • Peak RMSE: 1,027.087</li>
+          <li><b>ENS_MEAN</b> — Overall MAE: 12,038.994 • RMSE: 13,022.653 • Peak MAE: 17,730.677 • Peak RMSE: 17,849.006</li>
+          <li><b>ENS_MEDIAN</b> — Overall MAE: 13,765.326 • RMSE: 15,500.325 • Peak MAE: 21,936.467 • Peak RMSE: 22,091.510</li>
+        </ul>
+      </div>
     </div>
   </section>
 </main>

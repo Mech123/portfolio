@@ -9,44 +9,13 @@
   <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
-    /* Page-only lightweight styles (keeps site consistent, no global changes) */
-    .kpi-grid{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-    .kpi{
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 14px;
-      padding: 12px 14px;
-      background: rgba(255,255,255,0.03);
-    }
-    .kpi .kpi-label{ opacity:0.85; }
-    .kpi .kpi-value{ margin-top:6px; }
+    /* Keep page consistent with site, but no global changes */
 
-    .btn-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:12px;
-    }
-    .btn-lite{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      text-decoration:none;
-      color: inherit;
-    }
-    .btn-lite:hover{ background: rgba(255,255,255,0.07); }
+    /* REMOVE: KPI + external button styling — not used anymore */
 
     .eda-layout{
       display:grid;
-      grid-template-columns: 300px 1fr;
+      grid-template-columns: 320px 1fr;
       gap:16px;
       align-items:start;
       margin-top:14px;
@@ -55,6 +24,7 @@
       .eda-layout{ grid-template-columns: 1fr; }
     }
 
+    /* Step list */
     .step-list{
       display:flex;
       flex-direction:column;
@@ -66,7 +36,7 @@
       border-radius:14px;
       border:1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.03);
-      padding:12px 12px;
+      padding:14px 14px;
       cursor:pointer;
       color: inherit;
     }
@@ -75,27 +45,32 @@
       border-color: rgba(255,255,255,0.22);
       background: rgba(255,255,255,0.06);
     }
-    .step-title{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .badge{
-      display:inline-flex;
-      width:26px;
-      height:26px;
+
+    /* Alignment like your example: number / title / hint stacked */
+    .step-num{
+      width:30px;
+      height:30px;
       border-radius:10px;
+      display:flex;
       align-items:center;
       justify-content:center;
       border:1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.04);
-      flex:0 0 auto;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+    .step-name{
+      font-weight:700;
+      margin:0;
+      line-height:1.25;
     }
     .step-hint{
       opacity:0.85;
-      margin-top:6px;
+      margin-top:8px;
+      line-height:1.35;
     }
 
+    /* Gallery */
     .gallery{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -227,47 +202,6 @@
       and relationships between load and weather. These insights guide SARIMA configuration and feature
       design for LSTM / Hybrid / Ensemble models.
     </p>
-
-    <div class="btn-row">
-      <a class="btn-lite" target="_blank" rel="noopener"
-         href="https://doi.org/10.25832/time_series/2020-10-06">
-        <i class="bi bi-box-arrow-up-right"></i> Dataset (OPSD)
-      </a>
-
-      <a class="btn-lite" target="_blank" rel="noopener"
-         href="https://github.com/Mech123/dswp_group2/blob/main/preprocessing.ipynb">
-        <i class="bi bi-box-arrow-up-right"></i> Preprocessing Notebook
-      </a>
-
-      <a class="btn-lite" target="_blank" rel="noopener"
-         href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/lstm_model.ipynb">
-        <i class="bi bi-box-arrow-up-right"></i> LSTM Model Notebook
-      </a>
-
-      <a class="btn-lite" target="_blank" rel="noopener"
-         href="https://github.com/Mech123/dswp_group2/tree/main">
-        <i class="bi bi-github"></i> Project Repository
-      </a>
-    </div>
-
-    <div class="kpi-grid" aria-label="EDA snapshot">
-      <div class="kpi">
-        <div class="kpi-label">Resolution</div>
-        <div class="kpi-value">60 minutes</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Time range (UTC)</div>
-        <div class="kpi-value">2015-01-08 → 2018-09-30</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Peak threshold (p90)</div>
-        <div class="kpi-value">≈ 68,857 MW</div>
-      </div>
-      <div class="kpi">
-        <div class="kpi-label">Peak hours share</div>
-        <div class="kpi-value">≈ 10% (3,268 hours)</div>
-      </div>
-    </div>
   </section>
 
   <section class="card">
@@ -280,35 +214,50 @@
       <!-- Left: Step list -->
       <div class="step-list" role="tablist" aria-label="EDA steps">
         <button class="step-btn active" data-step="s1" role="tab" aria-selected="true">
-          <div class="step-title"><span class="badge">1</span> Time series overview</div>
+          <div class="step-num">1</div>
+          <div class="step-name">Time series overview</div>
           <div class="step-hint">Overall signal, trends, visible peaks</div>
         </button>
+
         <button class="step-btn" data-step="s2" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">2</span> Seasonality patterns</div>
+          <div class="step-num">2</div>
+          <div class="step-name">Seasonality patterns</div>
           <div class="step-hint">Daily/weekly cycles and monthly effects</div>
         </button>
+
         <button class="step-btn" data-step="s3" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">3</span> STL decomposition</div>
+          <div class="step-num">3</div>
+          <div class="step-name">STL decomposition</div>
           <div class="step-hint">Trend, seasonal component, residual spikes</div>
         </button>
+
         <button class="step-btn" data-step="s4" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">4</span> Stationarity checks</div>
+          <div class="step-num">4</div>
+          <div class="step-name">Stationarity checks</div>
           <div class="step-hint">Rolling mean/std and test guidance</div>
         </button>
+
         <button class="step-btn" data-step="s5" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">5</span> ACF and PACF</div>
+          <div class="step-num">5</div>
+          <div class="step-name">ACF and PACF</div>
           <div class="step-hint">Autocorrelation lags for SARIMA design</div>
         </button>
+
         <button class="step-btn" data-step="s6" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">6</span> Calendar effects</div>
+          <div class="step-num">6</div>
+          <div class="step-name">Calendar effects</div>
           <div class="step-hint">Hour/day/week/month heatmaps and comparisons</div>
         </button>
+
         <button class="step-btn" data-step="s7" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">7</span> Weather relationships</div>
+          <div class="step-num">7</div>
+          <div class="step-name">Weather relationships</div>
           <div class="step-hint">Scatter plots between weather and load</div>
         </button>
+
         <button class="step-btn" data-step="s8" role="tab" aria-selected="false">
-          <div class="step-title"><span class="badge">8</span> Lagged relationships</div>
+          <div class="step-num">8</div>
+          <div class="step-name">Lagged relationships</div>
           <div class="step-hint">Lag plots showing dependence structure</div>
         </button>
       </div>
@@ -331,15 +280,6 @@
               <img src="../assets/images/eda/step2_timeseries_60min.png" alt="Time series overview plot">
               <div class="cap">Electricity Load — Time Series Overview</div>
             </div>
-
-            <!-- Optional: add more images here if you have extra time-series plots
-            <div class="thumb" data-img="../assets/images/eda/<your_extra_plot>.png"
-                 data-title="Additional Time Series Plot"
-                 data-cap="Short explanation.">
-              <img src="../assets/images/eda/<your_extra_plot>.png" alt="Additional time series plot">
-              <div class="cap">Additional Time Series Plot</div>
-            </div>
-            -->
           </div>
         </div>
 
@@ -513,10 +453,7 @@
       b.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
   }
-
-  stepBtns.forEach(btn => {
-    btn.addEventListener('click', () => showStep(btn.dataset.step));
-  });
+  stepBtns.forEach(btn => btn.addEventListener('click', () => showStep(btn.dataset.step)));
 
   // Image modal gallery
   const thumbs = Array.from(document.querySelectorAll('.thumb'));
@@ -539,18 +476,15 @@
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
   }
-
   function closeModal(){
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
     modalImg.src = '';
   }
-
   function nextImg(){
     currentIndex = (currentIndex + 1) % thumbs.length;
     openModal(currentIndex);
   }
-
   function prevImg(){
     currentIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
     openModal(currentIndex);
@@ -561,12 +495,8 @@
   nextBtn.addEventListener('click', nextImg);
   prevBtn.addEventListener('click', prevImg);
 
-  // close on background click
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeModal();
-  });
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-  // keyboard support
   document.addEventListener('keydown', (e) => {
     if (!modal.classList.contains('open')) return;
     if (e.key === 'Escape') closeModal();

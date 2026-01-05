@@ -3,10 +3,82 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ensemble – Model</title>
+  <title>Ensemble / Combined Results – Model</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
+
+  <style>
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
+    .tab{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
+      text-decoration:none; color: var(--text-main); background:#fff;
+    }
+    .tab.active{ background: var(--primary); border-color: var(--primary); color:#fff; }
+
+    .summary-box{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    .table-wrap{
+      width:100%;
+      overflow:auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+    }
+
+    table.results{
+      width:100%;
+      border-collapse: collapse;
+      min-width: 980px;
+    }
+
+    table.results th, table.results td{
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    table.results th{
+      position: sticky;
+      top: 0;
+      background: #f9fafb;
+      z-index: 1;
+      font-weight: 700;
+    }
+
+    table.results tr:hover td{
+      background: rgba(0,0,0,0.02);
+    }
+
+    code{
+      padding: 2px 6px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #f9fafb;
+      font-size: 12px;
+    }
+
+    .note{
+      margin-top: 10px;
+      color: var(--text-muted);
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+  </style>
 </head>
 
 <body>
@@ -46,52 +118,104 @@
 
 <main class="content">
   <section class="card">
-    <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:center;">
-      <h1 style="margin:0;">Ensemble</h1>
-      <a class="btn" href="models.html"><i class="bi bi-arrow-left"></i> Back to Models</a>
-    </div>
-
-    <p class="muted" style="margin-top:10px;">
-      The Ensemble approach combines forecasts from multiple models (e.g., SARIMA, LSTM, Hybrid) to
-      improve robustness and reduce variance. This is especially useful when individual models behave
-      differently under peak-load conditions.
+    <h1>Ensemble / Combined Results</h1>
+    <p class="muted">
+      This page shows the complete evaluation table (all compared models + ensemble variants) from the uploaded CSV.
     </p>
 
-    <h2>What this page contains</h2>
-    <ul>
-      <li>High-level explanation of the ensemble strategy used in this project</li>
-      <li>Links to outputs: metrics JSON and predictions CSV (stored under <code>assets/data/ensemble/</code>)</li>
-      <li>(Later) plots/figures can be added under <code>assets/images/models/ensemble/</code></li>
-    </ul>
+    <div class="tabs">
+      <a class="tab" href="model_sarima.html"><i class="bi bi-graph-up"></i> SARIMA</a>
+      <a class="tab" href="model_lstm.html"><i class="bi bi-cpu"></i> LSTM</a>
+      <a class="tab" href="model_hybrid.html"><i class="bi bi-layers"></i> Hybrid</a>
+      <a class="tab active" href="model_ensemble.html"><i class="bi bi-diagram-2"></i> Ensemble</a>
+    </div>
 
-    <h2>Links</h2>
-    <ul>
-      <li>
-        Ensemble notebook (GitHub):
-        <a class="link" target="_blank" rel="noopener"
-           href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/EnSemble.ipynb">
-          Open EnSemble.ipynb
-        </a>
-      </li>
-      <li>
-        Metrics (local):
-        <a class="link" target="_blank" rel="noopener" href="../assets/data/ensemble/metrics_ensemble.json">
-          assets/data/ensemble/metrics_ensemble.json
-        </a>
-      </li>
-      <li>
-        Predictions (local):
-        <a class="link" target="_blank" rel="noopener" href="../assets/data/ensemble/ensemble_predictions.csv">
-          assets/data/ensemble/ensemble_predictions.csv
-        </a>
-      </li>
-    </ul>
+    <div class="btn-row">
+      <a class="btn" href="../assets/data/ensemble/metrics_ensemble.json" target="_blank" rel="noopener">
+        <i class="bi bi-braces"></i> Open metrics JSON
+      </a>
+      <a class="btn" href="../assets/data/ensemble/ensemble_predictions.csv" target="_blank" rel="noopener">
+        <i class="bi bi-table"></i> Open predictions CSV
+      </a>
+    </div>
 
-    <div class="callout" style="margin-top:14px;">
-      <b>Next:</b> When you upload ensemble plots, tell me the exact image filenames and I’ll add a clean gallery like SARIMA/LSTM/Hybrid pages.
+    <div class="summary-box">
+      <h2 style="margin:0 0 8px;">Evaluation results (from <code>final_metrics_table_eval.csv</code>)</h2>
+
+      <div class="table-wrap" role="region" aria-label="Evaluation results table">
+        <table class="results">
+          <thead>
+            <tr>
+              <th>model</th>
+              <th>Overall_MAE</th>
+              <th>Overall_RMSE</th>
+              <th>Overall_MAPE(%)</th>
+              <th>Overall_sMAPE(%)</th>
+              <th>Overall_R2</th>
+              <th>Peak_MAE</th>
+              <th>Peak_RMSE</th>
+              <th>Peak_MAPE(%)</th>
+              <th>Peak_sMAPE(%)</th>
+              <th>Peak_R2</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>FINAL_SWITCH_RESIDUAL</code></td><td>520.004</td><td>672.238</td><td>0.975</td><td>0.973</td><td>0.995</td><td>598.708</td><td>825.228</td><td>0.876</td><td>0.883</td><td>0.368</td></tr>
+            <tr><td><code>LSTM</code></td><td>521.314</td><td>674.659</td><td>0.976</td><td>0.975</td><td>0.995</td><td>611.755</td><td>844.671</td><td>0.894</td><td>0.901</td><td>0.338</td></tr>
+            <tr><td><code>ENS_NNLS</code></td><td>521.314</td><td>674.659</td><td>0.976</td><td>0.975</td><td>0.995</td><td>611.755</td><td>844.671</td><td>0.894</td><td>0.901</td><td>0.338</td></tr>
+            <tr><td><code>ENS_RESIDUAL_LSTM</code></td><td>677.403</td><td>844.527</td><td>1.296</td><td>1.283</td><td>0.992</td><td>548.478</td><td>707.845</td><td>0.806</td><td>0.805</td><td>0.535</td></tr>
+            <tr><td><code>ENS_WEIGHTED_RIDGE</code></td><td>714.008</td><td>903.807</td><td>1.359</td><td>1.345</td><td>0.991</td><td>599.624</td><td>771.685</td><td>0.882</td><td>0.879</td><td>0.448</td></tr>
+            <tr><td><code>ENS_STACK_RIDGE</code></td><td>782.643</td><td>966.227</td><td>1.492</td><td>1.477</td><td>0.989</td><td>884.647</td><td>1,027.087</td><td>1.300</td><td>1.289</td><td>0.009</td></tr>
+            <tr><td><code>ENS_MEAN</code></td><td>12,038.994</td><td>13,022.653</td><td>19.687</td><td>26.960</td><td>-0.933</td><td>17,730.677</td><td>17,849.006</td><td>25.884</td><td>34.954</td><td>-294.379</td></tr>
+            <tr><td><code>ENS_MEDIAN</code></td><td>13,765.326</td><td>15,500.325</td><td>24.291</td><td>28.473</td><td>-1.733</td><td>21,936.467</td><td>22,091.510</td><td>32.034</td><td>37.542</td><td>-451.069</td></tr>
+            <tr><td><code>SARIMA</code></td><td>13,785.069</td><td>15,502.139</td><td>24.317</td><td>28.505</td><td>-1.733</td><td>21,936.467</td><td>22,091.510</td><td>32.034</td><td>37.542</td><td>-451.069</td></tr>
+            <tr><td><code>Hybrid</code></td><td>22,375.808</td><td>23,607.357</td><td>40.466</td><td>51.852</td><td>-5.338</td><td>30,760.032</td><td>30,940.847</td><td>44.627</td><td>56.101</td><td>-983.971</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="note">
+        Values are shown exactly as in the uploaded evaluation CSV (rounded to 3 decimals for display).
+      </p>
     </div>
   </section>
+
+  <section class="card">
+    <h2>Metrics (JSON auto-load)</h2>
+    <div id="metricsState" class="muted">Loading metrics…</div>
+    <table class="metrics" id="metricsTable" style="display:none;">
+      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+      <tbody id="metricsBody"></tbody>
+    </table>
+  </section>
 </main>
+
+<script>
+  async function loadEnsembleMetrics() {
+    const state = document.getElementById("metricsState");
+    const table = document.getElementById("metricsTable");
+    const body = document.getElementById("metricsBody");
+
+    try {
+      const res = await fetch("../assets/data/ensemble/metrics_ensemble.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Metrics JSON not found");
+      const data = await res.json();
+
+      const rows = [];
+      Object.keys(data).forEach((k) => {
+        const v = data[k];
+        rows.push([k, (typeof v === "object") ? JSON.stringify(v) : String(v)]);
+      });
+
+      body.innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+      state.style.display = "none";
+      table.style.display = "table";
+    } catch {
+      state.textContent = "Could not load metrics. Check: assets/data/ensemble/metrics_ensemble.json";
+    }
+  }
+  loadEnsembleMetrics();
+</script>
 
 <script src="../assets/app.js"></script>
 </body>
