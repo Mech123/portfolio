@@ -33,26 +33,24 @@ html, body {
   color: var(--text-main);
 }
 
-/* FORCE SAME SIZE EVERYWHERE */
+/* FORCE SAME SIZE EVERYWHERE (including headings) */
 h1, h2, h3, h4, h5, h6,
-p, a, li, span, div, button, input, label, code {
+p, a, li, span, div, button, input, label, code, pre, table, th, td, summary {
   font-family: var(--font-family);
   font-size: var(--font-size);
   line-height: var(--line-height);
+  font-weight: 400; /* IMPORTANT: no bold */
 }
 
-/* Headings differ ONLY by weight */
-h1, h2, h3 {
-  font-weight: 600;
+/* Headings: same size, same weight; we differentiate using spacing + subtle color */
+h1, h2, h3, h4, h5, h6 {
   color: #111827;
   margin: 0 0 10px 0;
 }
 
 p { margin: 0 0 12px 0; }
 
-.muted {
-  color: var(--text-muted);
-}
+.muted { color: var(--text-muted); }
 
 /* ===== TOP BAR ===== */
 .topbar {
@@ -83,7 +81,7 @@ p { margin: 0 0 12px 0; }
 .topbar-center {
   width: 100%;
   text-align: center;
-  font-weight: 600;
+  font-weight: 400; /* no bold */
 }
 
 /* ===== SIDEBAR ===== */
@@ -100,7 +98,7 @@ p { margin: 0 0 12px 0; }
 .sidebar-brand {
   padding: 14px 16px;
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 400; /* no bold */
   border-bottom: 1px solid #3a4b5c;
 }
 
@@ -156,6 +154,7 @@ p { margin: 0 0 12px 0; }
 .hero-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .btn {
@@ -234,3 +233,7 @@ p { margin: 0 0 12px 0; }
   .content { margin-left: 0; }
   .team { grid-template-columns: 1fr; }
 }
+
+/* When collapsed (desktop) */
+body.sidebar-collapsed .sidebar { transform: translateX(-100%); }
+body.sidebar-collapsed .content { margin-left: 0; }

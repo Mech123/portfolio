@@ -7,6 +7,181 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
+
+  <style>
+    /* Page-only lightweight styles (keeps site consistent, no global changes) */
+    .kpi-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .kpi{
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .kpi .kpi-label{ opacity:0.85; }
+    .kpi .kpi-value{ margin-top:6px; }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+    .btn-lite{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      text-decoration:none;
+      color: inherit;
+    }
+    .btn-lite:hover{ background: rgba(255,255,255,0.07); }
+
+    .eda-layout{
+      display:grid;
+      grid-template-columns: 300px 1fr;
+      gap:16px;
+      align-items:start;
+      margin-top:14px;
+    }
+    @media (max-width: 980px){
+      .eda-layout{ grid-template-columns: 1fr; }
+    }
+
+    .step-list{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .step-btn{
+      width:100%;
+      text-align:left;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.03);
+      padding:12px 12px;
+      cursor:pointer;
+      color: inherit;
+    }
+    .step-btn:hover{ background: rgba(255,255,255,0.06); }
+    .step-btn.active{
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.06);
+    }
+    .step-title{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .badge{
+      display:inline-flex;
+      width:26px;
+      height:26px;
+      border-radius:10px;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.04);
+      flex:0 0 auto;
+    }
+    .step-hint{
+      opacity:0.85;
+      margin-top:6px;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .thumb{
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.02);
+      cursor:pointer;
+    }
+    .thumb img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+    .thumb .cap{
+      padding:10px 12px;
+      opacity:0.9;
+    }
+
+    /* Modal */
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background: rgba(0,0,0,0.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9999;
+    }
+    .modal-overlay.open{ display:flex; }
+    .modal{
+      width:min(1100px, 96vw);
+      max-height: 92vh;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(20,24,32,0.96);
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.10);
+    }
+    .modal-title{ opacity:0.95; }
+    .modal-actions{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .icon-round{
+      width:38px;
+      height:38px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      cursor:pointer;
+      color: inherit;
+    }
+    .icon-round:hover{ background: rgba(255,255,255,0.08); }
+
+    .modal-body{
+      overflow:auto;
+      padding:14px;
+    }
+    .modal-body img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .modal-cap{
+      margin-top:10px;
+      opacity:0.9;
+    }
+  </style>
 </head>
 
 <body>
@@ -48,38 +223,356 @@
   <section class="card">
     <h1>Exploratory Data Analysis</h1>
     <p class="muted">
-      EDA is used to understand time patterns, seasonality, correlations, and peak-load behavior before
-      modeling.
+      We use EDA to understand demand patterns, seasonality, autocorrelation structure, calendar effects,
+      and relationships between load and weather. These insights guide SARIMA configuration and feature
+      design for LSTM / Hybrid / Ensemble models.
     </p>
 
-    <h2>Temporal Patterns</h2>
-    <ul>
-      <li>Daily and weekly demand cycles</li>
-      <li>Seasonal variation (winter vs summer)</li>
-      <li>Trend and anomalies over time</li>
-    </ul>
+    <div class="btn-row">
+      <a class="btn-lite" target="_blank" rel="noopener"
+         href="https://doi.org/10.25832/time_series/2020-10-06">
+        <i class="bi bi-box-arrow-up-right"></i> Dataset (OPSD)
+      </a>
 
-    <h2>Seasonality and Decomposition</h2>
-    <ul>
-      <li>Decomposition into trend, seasonal, and residual components</li>
-      <li>Weekly and annual seasonality strength relevant for SARIMA</li>
-    </ul>
+      <a class="btn-lite" target="_blank" rel="noopener"
+         href="https://github.com/Mech123/dswp_group2/blob/main/preprocessing.ipynb">
+        <i class="bi bi-box-arrow-up-right"></i> Preprocessing Notebook
+      </a>
 
-    <h2>Correlation and Weather Effects</h2>
-    <ul>
-      <li>Correlation between demand and temperature</li>
-      <li>Effects of weather changes on demand patterns</li>
-    </ul>
+      <a class="btn-lite" target="_blank" rel="noopener"
+         href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/lstm_model.ipynb">
+        <i class="bi bi-box-arrow-up-right"></i> LSTM Model Notebook
+      </a>
 
-    <h2>Peak-load Focus</h2>
-    <ul>
-      <li>Define peak hours using a percentile threshold (e.g., 90th percentile of load)</li>
-      <li>Compare peak vs normal hours across time-of-day and seasons</li>
-      <li>Track model errors separately for peak periods</li>
-    </ul>
+      <a class="btn-lite" target="_blank" rel="noopener"
+         href="https://github.com/Mech123/dswp_group2/tree/main">
+        <i class="bi bi-github"></i> Project Repository
+      </a>
+    </div>
+
+    <div class="kpi-grid" aria-label="EDA snapshot">
+      <div class="kpi">
+        <div class="kpi-label">Resolution</div>
+        <div class="kpi-value">60 minutes</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Time range (UTC)</div>
+        <div class="kpi-value">2015-01-08 → 2018-09-30</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Peak threshold (p90)</div>
+        <div class="kpi-value">≈ 68,857 MW</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Peak hours share</div>
+        <div class="kpi-value">≈ 10% (3,268 hours)</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>EDA Steps</h2>
+    <p class="muted">
+      Click a step to view key observations and plots. Click any plot to zoom.
+    </p>
+
+    <div class="eda-layout">
+      <!-- Left: Step list -->
+      <div class="step-list" role="tablist" aria-label="EDA steps">
+        <button class="step-btn active" data-step="s1" role="tab" aria-selected="true">
+          <div class="step-title"><span class="badge">1</span> Time series overview</div>
+          <div class="step-hint">Overall signal, trends, visible peaks</div>
+        </button>
+        <button class="step-btn" data-step="s2" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">2</span> Seasonality patterns</div>
+          <div class="step-hint">Daily/weekly cycles and monthly effects</div>
+        </button>
+        <button class="step-btn" data-step="s3" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">3</span> STL decomposition</div>
+          <div class="step-hint">Trend, seasonal component, residual spikes</div>
+        </button>
+        <button class="step-btn" data-step="s4" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">4</span> Stationarity checks</div>
+          <div class="step-hint">Rolling mean/std and test guidance</div>
+        </button>
+        <button class="step-btn" data-step="s5" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">5</span> ACF and PACF</div>
+          <div class="step-hint">Autocorrelation lags for SARIMA design</div>
+        </button>
+        <button class="step-btn" data-step="s6" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">6</span> Calendar effects</div>
+          <div class="step-hint">Hour/day/week/month heatmaps and comparisons</div>
+        </button>
+        <button class="step-btn" data-step="s7" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">7</span> Weather relationships</div>
+          <div class="step-hint">Scatter plots between weather and load</div>
+        </button>
+        <button class="step-btn" data-step="s8" role="tab" aria-selected="false">
+          <div class="step-title"><span class="badge">8</span> Lagged relationships</div>
+          <div class="step-hint">Lag plots showing dependence structure</div>
+        </button>
+      </div>
+
+      <!-- Right: Step content -->
+      <div>
+        <!-- Step 1 -->
+        <div class="step-panel" id="s1">
+          <h2>Time series overview</h2>
+          <ul>
+            <li>The load series shows strong recurring cycles and seasonal peaks across years.</li>
+            <li>Daily fluctuations dominate the short-term structure, while slower shifts reflect trends.</li>
+            <li>Peak events are visible as high-load periods and motivate peak-focused evaluation.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step2_timeseries_60min.png"
+                 data-title="Electricity Load — Time Series Overview"
+                 data-cap="Full period view and short window view. Highlights recurring daily structure and seasonal changes.">
+              <img src="../assets/images/eda/step2_timeseries_60min.png" alt="Time series overview plot">
+              <div class="cap">Electricity Load — Time Series Overview</div>
+            </div>
+
+            <!-- Optional: add more images here if you have extra time-series plots
+            <div class="thumb" data-img="../assets/images/eda/<your_extra_plot>.png"
+                 data-title="Additional Time Series Plot"
+                 data-cap="Short explanation.">
+              <img src="../assets/images/eda/<your_extra_plot>.png" alt="Additional time series plot">
+              <div class="cap">Additional Time Series Plot</div>
+            </div>
+            -->
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-panel" id="s2" style="display:none;">
+          <h2>Seasonality patterns</h2>
+          <ul>
+            <li>Clear daily and weekly cycles are visible in hourly and weekday aggregates.</li>
+            <li>Month-wise patterns indicate stronger demand in winter months compared to summer.</li>
+            <li>Heatmaps reveal typical high-demand windows on weekdays versus weekends.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step3_seasonality_60min.png"
+                 data-title="Seasonality — Hour, Weekday, Month and Heatmaps"
+                 data-cap="Average load by hour/day/month and seasonal subseries. Shows typical weekday vs weekend behavior.">
+              <img src="../assets/images/eda/step3_seasonality_60min.png" alt="Seasonality plots">
+              <div class="cap">Seasonality — Hour/Weekday/Month Patterns</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-panel" id="s3" style="display:none;">
+          <h2>STL decomposition</h2>
+          <ul>
+            <li>STL separates the signal into trend, seasonal, and residual components.</li>
+            <li>Seasonality explains a large part of variation; residual spikes highlight unusual demand events.</li>
+            <li>This decomposition supports SARIMA design and residual learning in hybrid models.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step3_stl_decomposition_60min.png"
+                 data-title="STL Decomposition"
+                 data-cap="Original series decomposed into trend, seasonal and residual components to analyze structure.">
+              <img src="../assets/images/eda/step3_stl_decomposition_60min.png" alt="STL decomposition plots">
+              <div class="cap">STL Decomposition</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-panel" id="s4" style="display:none;">
+          <h2>Stationarity checks</h2>
+          <ul>
+            <li>Rolling mean and rolling standard deviation help visually assess stationarity.</li>
+            <li>Stationarity tests (ADF/KPSS) guide whether differencing is needed for SARIMA.</li>
+            <li>We validate stationarity decisions again via SARIMA residual diagnostics.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step4_stationarity_60min.png"
+                 data-title="Stationarity — Rolling Statistics"
+                 data-cap="Rolling mean and rolling standard deviation across time. Used to assess stationarity behavior.">
+              <img src="../assets/images/eda/step4_stationarity_60min.png" alt="Stationarity plots">
+              <div class="cap">Stationarity — Rolling Statistics</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-panel" id="s5" style="display:none;">
+          <h2>ACF and PACF</h2>
+          <ul>
+            <li>ACF/PACF reveal strong dependence at short lags and seasonal lags (daily/weekly).</li>
+            <li>These plots support choosing SARIMA orders and seasonal period settings.</li>
+            <li>Key lags often include 1, 24 and 168 hours in hourly load forecasting.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step5_autocorrelation_60min.png"
+                 data-title="ACF and PACF"
+                 data-cap="Autocorrelation and partial autocorrelation plots used for SARIMA order selection and seasonal reasoning.">
+              <img src="../assets/images/eda/step5_autocorrelation_60min.png" alt="ACF and PACF plots">
+              <div class="cap">ACF and PACF</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step-panel" id="s6" style="display:none;">
+          <h2>Calendar effects</h2>
+          <ul>
+            <li>Demand differs significantly across weekdays and weekends.</li>
+            <li>Hour × day heatmaps highlight typical high-demand windows during business hours.</li>
+            <li>Month × weekday effects indicate seasonality and operational shifts across the year.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step6_calendar_effects_60min.png"
+                 data-title="Calendar Effects"
+                 data-cap="Weekday vs weekend distributions and hourly patterns; helps define calendar-based features and baselines.">
+              <img src="../assets/images/eda/step6_calendar_effects_60min.png" alt="Calendar effects plots">
+              <div class="cap">Calendar Effects</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 7 -->
+        <div class="step-panel" id="s7" style="display:none;">
+          <h2>Weather relationships</h2>
+          <ul>
+            <li>Weather features show non-linear and scattered relationships with load.</li>
+            <li>Temperature, wind speed, and solar radiation are important signals for demand behavior.</li>
+            <li>Proxy features can summarize weather influence and reduce noise for learning models.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step7_weather_exploration_60min.png"
+                 data-title="Weather Exploration"
+                 data-cap="Scatter plots and correlations between key weather variables and electricity demand.">
+              <img src="../assets/images/eda/step7_weather_exploration_60min.png" alt="Weather exploration plots">
+              <div class="cap">Weather Exploration</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 8 -->
+        <div class="step-panel" id="s8" style="display:none;">
+          <h2>Lagged relationships</h2>
+          <ul>
+            <li>Lag plots show strong dependency between current load and short lags (e.g., t-1).</li>
+            <li>Daily lag (t-24) also shows strong structure and motivates seasonal modeling.</li>
+            <li>These insights support lag features and rolling windows for LSTM and hybrid learning.</li>
+          </ul>
+
+          <div class="gallery">
+            <div class="thumb" data-img="../assets/images/eda/step8_lagged_relationships_60min.png"
+                 data-title="Lagged Relationships"
+                 data-cap="Lag scatter plots for multiple lags; highlights dependence and motivates lag/rolling feature creation.">
+              <img src="../assets/images/eda/step8_lagged_relationships_60min.png" alt="Lagged relationships plots">
+              <div class="cap">Lagged Relationships</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </section>
 </main>
 
+<!-- Modal -->
+<div class="modal-overlay" id="imgModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Plot viewer">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Plot</div>
+      <div class="modal-actions">
+        <button class="icon-round" id="prevBtn" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+        <button class="icon-round" id="nextBtn" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+        <button class="icon-round" id="closeBtn" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <img id="modalImg" alt="Expanded plot">
+      <div class="modal-cap" id="modalCap"></div>
+    </div>
+  </div>
+</div>
+
 <script src="../assets/app.js"></script>
+<script>
+  // Step switcher
+  const stepBtns = Array.from(document.querySelectorAll('.step-btn'));
+  const panels = Array.from(document.querySelectorAll('.step-panel'));
+
+  function showStep(stepId){
+    panels.forEach(p => p.style.display = (p.id === stepId) ? '' : 'none');
+    stepBtns.forEach(b => {
+      const isActive = b.dataset.step === stepId;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+  }
+
+  stepBtns.forEach(btn => {
+    btn.addEventListener('click', () => showStep(btn.dataset.step));
+  });
+
+  // Image modal gallery
+  const thumbs = Array.from(document.querySelectorAll('.thumb'));
+  const modal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalCap = document.getElementById('modalCap');
+  const closeBtn = document.getElementById('closeBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+
+  let currentIndex = 0;
+
+  function openModal(index){
+    currentIndex = index;
+    const t = thumbs[currentIndex];
+    modalImg.src = t.getAttribute('data-img');
+    modalTitle.textContent = t.getAttribute('data-title') || 'Plot';
+    modalCap.textContent = t.getAttribute('data-cap') || '';
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    modalImg.src = '';
+  }
+
+  function nextImg(){
+    currentIndex = (currentIndex + 1) % thumbs.length;
+    openModal(currentIndex);
+  }
+
+  function prevImg(){
+    currentIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
+    openModal(currentIndex);
+  }
+
+  thumbs.forEach((t, i) => t.addEventListener('click', () => openModal(i)));
+  closeBtn.addEventListener('click', closeModal);
+  nextBtn.addEventListener('click', nextImg);
+  prevBtn.addEventListener('click', prevImg);
+
+  // close on background click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // keyboard support
+  document.addEventListener('keydown', (e) => {
+    if (!modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowRight') nextImg();
+    if (e.key === 'ArrowLeft') prevImg();
+  });
+</script>
 </body>
 </html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ensemble – Model</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/style.css" />
+
+  <style>
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
+    .tab{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
+      text-decoration:none; color: var(--text-main); background:#fff;
+    }
+    .tab.active{ background: var(--primary); border-color: var(--primary); color:#fff; }
+
+    .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; }
+    .metrics th, .metrics td { padding: 10px 12px; border-bottom:1px solid var(--border); text-align:left; }
+    .metrics th { background:#f9fafb; }
+    .metrics tr:last-child td { border-bottom:none; }
+
+    .callout {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      background: #fff;
+      margin-top: 12px;
+    }
+
+    .bullets { margin: 0; padding-left: 18px; }
+    .bullets li { margin: 6px 0; }
+
+    code.inline { padding: 2px 6px; border: 1px solid var(--border); border-radius: 8px; background:#f9fafb; }
+  </style>
+</head>
+
+<body>
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
+  </div>
+  <div class="topbar-center">Electricity Demand Forecasting (Germany)</div>
+</header>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    Electricity Demand Forecasting
+    <div class="brand-sub">Bathula Veera • Gagan • Pinky</div>
+  </div>
+
+  <nav class="nav">
+    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
+    <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
+    <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
+    <a class="nav-link" href="eda.html"><i class="bi bi-graph-up"></i> Exploratory Data Analysis</a>
+    <a class="nav-link" href="features.html"><i class="bi bi-diagram-3"></i> Feature Engineering</a>
+    <a class="nav-link active" href="models.html"><i class="bi bi-cpu"></i> Models & Results</a>
+    <a class="nav-link" href="conclusion.html"><i class="bi bi-check-circle"></i> Conclusion</a>
+    <a class="nav-link" href="references.html"><i class="bi bi-book"></i> References</a>
+    <a class="nav-link" href="notebook.html"><i class="bi bi-terminal"></i> Process Notebook</a>
+
+    <div class="nav-divider"></div>
+    <a class="nav-link" id="githubLink"><i class="bi bi-github"></i> Git Repository</a>
+  </nav>
+
+  <div style="padding:14px 16px;color:#cfd8e3;">
+    © <span id="year"></span>
+  </div>
+</aside>
+
+<main class="content">
+  <section class="card">
+    <h1>Ensemble</h1>
+    <p class="muted">
+      The ensemble combines predictions from multiple models to improve robustness and reduce error,
+      especially around difficult regions like peak demand. Instead of relying on a single hypothesis
+      about the data-generating process, an ensemble leverages complementary strengths of different
+      models (e.g., classical seasonal structure from SARIMA and nonlinear dynamics from LSTM/Hybrid).
+    </p>
+
+    <div class="tabs">
+      <a class="tab" href="model_sarima.html"><i class="bi bi-graph-up"></i> SARIMA</a>
+      <a class="tab" href="model_lstm.html"><i class="bi bi-cpu"></i> LSTM</a>
+      <a class="tab" href="model_hybrid.html"><i class="bi bi-layers"></i> Hybrid</a>
+      <a class="tab active" href="model_ensemble.html"><i class="bi bi-diagram-2"></i> Ensemble</a>
+    </div>
+
+    <div class="hero-actions" style="margin-top:12px;">
+      <!-- Update filenames here if your ensemble metrics/prediction filenames differ -->
+      <a class="btn" href="./assets/data/ensemble/metrics_ensemble.json" target="_blank" rel="noopener">
+        <i class="bi bi-braces"></i> Open metrics JSON
+      </a>
+      <a class="btn" href="./assets/data/ensemble/ensemble_predictions.csv" target="_blank" rel="noopener">
+        <i class="bi bi-table"></i> Open predictions CSV
+      </a>
+      <a class="btn" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/EnSemble.ipynb" target="_blank" rel="noopener">
+        <i class="bi bi-journal-code"></i> Notebook (GitHub)
+      </a>
+    </div>
+
+    <div class="callout">
+      <p><strong style="font-weight:400;">Recommended folder setup</strong></p>
+      <p class="muted" style="margin-top:6px;">
+        Keep ensemble artifacts isolated to avoid conflicts:
+        <br>
+        <code class="inline">assets/data/ensemble/</code> and <code class="inline">assets/images/models/ensemble/</code>
+      </p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>How this ensemble works (summary)</h2>
+
+    <ul class="bullets">
+      <li>
+        <span>Inputs:</span> base model predictions aligned on the same timestamps (e.g., SARIMA, LSTM, Hybrid).
+      </li>
+      <li>
+        <span>Combination:</span> a weighted (or constrained) combination such as linear weights or NNLS weights
+        that minimizes validation error.
+      </li>
+      <li>
+        <span>Goal:</span> improve general accuracy and stabilize performance during peaks and rapid ramps.
+      </li>
+      <li>
+        <span>Evaluation:</span> compare against each base model using MAE/RMSE/MAPE, and optionally peak-specific metrics.
+      </li>
+    </ul>
+
+    <div class="callout">
+      <p><strong style="font-weight:400;">Tip</strong></p>
+      <p class="muted" style="margin-top:6px;">
+        When you send me the ensemble image filenames later, I’ll add a clickable gallery (same as SARIMA/Hybrid/LSTM)
+        and link each figure to the corresponding story: weights, error distribution, peak-day zoom, and scatter.
+      </p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Metrics (optional auto-load)</h2>
+    <p class="muted">If you place <code>metrics_ensemble.json</code> in <code>assets/data/ensemble/</code>, this table will load automatically.</p>
+
+    <div id="metricsState" class="muted">Loading metrics…</div>
+    <table class="metrics" id="metricsTable" style="display:none;">
+      <thead>
+        <tr><th>Metric</th><th>Value</th></tr>
+      </thead>
+      <tbody id="metricsBody"></tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Figures (add later)</h2>
+    <p class="muted">
+      Place plots under <code>assets/images/models/ensemble/</code>.  
+      When ready, share the exact filenames and I’ll add them with zoom-in modal and captions.
+    </p>
+  </section>
+</main>
+
+<script>
+  async function loadEnsembleMetrics() {
+    const state = document.getElementById("metricsState");
+    const table = document.getElementById("metricsTable");
+    const body = document.getElementById("metricsBody");
+
+    try {
+      const res = await fetch("./assets/data/ensemble/metrics_ensemble.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("Metrics JSON not found");
+      const data = await res.json();
+
+      const rows = [];
+      Object.keys(data).forEach((k) => {
+        const v = data[k];
+        rows.push([k, (typeof v === "object") ? JSON.stringify(v) : String(v)]);
+      });
+
+      body.innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+      state.style.display = "none";
+      table.style.display = "table";
+    } catch (e) {
+      state.textContent = "Metrics not loaded (optional). Put metrics at: assets/data/ensemble/metrics_ensemble.json";
+    }
+  }
+
+  loadEnsembleMetrics();
+</script>
+
+<script src="./assets/app.js"></script>
+</body>
+</html>

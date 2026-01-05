@@ -6,7 +6,7 @@
   <title>Models & Results</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./assets/style.css" />
 </head>
 
 <body>
@@ -24,7 +24,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -48,44 +48,42 @@
   <section class="card">
     <h1>Models & Results</h1>
     <p class="muted">
-      We compare four forecasting pipelines for short-term demand forecasting and evaluate overall performance
-      and peak-load stability.
+      Open each model page for its metrics (JSON), prediction outputs (CSV), and figures.
     </p>
+  </section>
 
-    <h2>SARIMA</h2>
-    <ul>
-      <li>Statistical baseline capturing trend and seasonality</li>
-      <li>Rolling-origin backtesting and diagnostics</li>
-    </ul>
+  <section class="card">
+    <h2>Open Model Pages</h2>
+    <div class="hero-actions">
+      <a class="btn primary" href="model_sarima.html"><i class="bi bi-graph-up"></i> SARIMA</a>
+      <a class="btn primary" href="model_lstm.html"><i class="bi bi-cpu"></i> LSTM</a>
+      <a class="btn primary" href="model_hybrid.html"><i class="bi bi-layers"></i> Hybrid</a>
+      <a class="btn primary" href="model_ensemble.html"><i class="bi bi-diagram-2"></i> Ensemble</a>
+    </div>
+  </section>
 
-    <h2>LSTM</h2>
-    <ul>
-      <li>Deep learning model for nonlinear patterns</li>
-      <li>Uses lagged sequences and exogenous features</li>
-    </ul>
-
-    <h2>Hybrid SARIMA + LSTM</h2>
-    <ul>
-      <li>SARIMA models structured components</li>
-      <li>LSTM predicts residual errors</li>
-      <li>Final forecast = SARIMA forecast + LSTM residual forecast</li>
-    </ul>
-
-    <h2>Ensemble</h2>
-    <ul>
-      <li>Combines SARIMA and LSTM forecasts</li>
-      <li>Weighted averaging improves robustness and reduces variance</li>
-    </ul>
-
-    <h2>Evaluation Metrics</h2>
-    <ul>
-      <li>MAE, RMSE, sMAPE for all hours</li>
-      <li>MAE and RMSE for peak hours (percentile-based threshold)</li>
-      <li>Training time and inference latency</li>
-    </ul>
+  <section class="card">
+    <h2>Folder structure (recommended)</h2>
+    <p class="muted">
+      Keep each model fully isolated to avoid filename conflicts.
+    </p>
+    <pre style="white-space:pre-wrap;margin:0;">
+assets/
+  data/
+    sarima/    (sarima_metrics.json, sarima_forecasts.csv, ...)
+    lstm/      (metrics.json, lstm_predictions.csv, best_model.h5, ...)
+    hybrid/    (metrics_hybrid.json, hybrid_predictions.csv, best_residual_model.h5, ...)
+    ensemble/  (metrics_ensemble.json, ensemble_predictions.csv, ...)
+  images/
+    models/
+      sarima/   (00_data_shift_analysis.png, ...)
+      lstm/     (training_history.png, predictions_visualization.png)
+      hybrid/   (training_history_hybrid.png, ...)
+      ensemble/ (your ensemble plots)
+    </pre>
   </section>
 </main>
 
-<script src="../assets/app.js"></script>
+<script src="./assets/app.js"></script>
 </body>
 </html>
