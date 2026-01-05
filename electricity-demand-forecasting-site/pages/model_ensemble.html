@@ -6,6 +6,7 @@
   <title>Ensemble – Results</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- IMPORTANT: pages/* must use ../assets -->
   <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
@@ -27,11 +28,31 @@
       margin-top: 12px;
     }
 
-    .table-wrap{ overflow:auto; border:1px solid var(--border); border-radius: 12px; background:#fff; margin-top: 12px; }
+    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background:#fff;
+      color: var(--text-main);
+      text-decoration:none;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .pill:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); border-color: rgba(0,0,0,.12); }
+    .pill i{ color: var(--primary); }
+
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+      margin-top: 12px;
+    }
     table.metrics-wide{
       width: 100%;
       border-collapse: collapse;
-      min-width: 980px;
+      min-width: 1020px;
     }
     table.metrics-wide th, table.metrics-wide td{
       padding: 10px 12px;
@@ -46,20 +67,7 @@
       z-index: 1;
     }
     table.metrics-wide tr:last-child td{ border-bottom: none; }
-
-    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px; }
-    .pill{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
-      border:1px solid var(--border);
-      border-radius: 999px;
-      background:#fff;
-      color: var(--text-main);
-      text-decoration:none;
-      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-    }
-    .pill:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); border-color: rgba(0,0,0,.12); }
-    .pill i{ color: var(--primary); }
+    .muted-small{ color: var(--text-muted); font-size: 13px; }
   </style>
 </head>
 
@@ -101,8 +109,9 @@
 <main class="content">
   <section class="card">
     <h1 style="margin:0;">Ensemble</h1>
+
     <p class="muted" style="margin-top:10px;">
-      This page shows the complete evaluation table (including all ensemble variants).
+      This page shows the full evaluation results table (base models + ensemble variants).
     </p>
 
     <div class="tabs">
@@ -113,29 +122,33 @@
     </div>
 
     <div class="pill-row">
+      <!-- keep this if the CSV is actually deployed to this path -->
       <a class="pill" href="../assets/data/final_metrics_table_eval.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Open evaluation CSV
       </a>
+
+      <!-- keep this link only if you already use it in your site -->
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/EnSemble.ipynb" target="_blank" rel="noopener">
         <i class="bi bi-journal-code"></i> Notebook (GitHub)
       </a>
     </div>
 
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Results table</h2>
+      <h2 style="margin:0 0 8px;">What is included</h2>
       <p class="muted" style="margin:0;">
-        The full set of evaluated strategies (including FINAL_SWITCH_RESIDUAL, ENS_NNLS, ENS_RESIDUAL_LSTM, etc.)
-        is displayed below exactly as in the uploaded CSV.
+        Ensemble forecasting is implemented by aligning SARIMA, LSTM, and Hybrid predictions by timestamp and comparing multiple combination strategies. It evaluates simple averaging baselines (mean/median) and then applies stacking with linear models: Ridge-based stacking (with and without intercept) and a non-negative least squares (NNLS) setup to derive interpretable convex weights. Performance is measured both overall and specifically on peak demand periods defined by a 90th-percentile (p90) threshold. In addition, a residual-correction ensemble learns the LSTM residual using SARIMA and Hybrid predictions as inputs, producing an adjusted forecast (LSTM + predicted residual). Finally, a regime-switching ensemble chooses between the plain LSTM and the residual-corrected LSTM depending on whether demand is above the p90 threshold, targeting better peak accuracy without sacrificing overall performance.
+      </p>
+      <p class="muted-small" style="margin:10px 0 0;">
+        The table is embedded (no runtime CSV fetch), so it will always display on Netlify.
       </p>
     </div>
   </section>
 
   <section class="card">
-    <h2>Evaluation metrics (full table)</h2>
-    <div id="state" class="muted">Loading evaluation CSV…</div>
+    <h2>Evaluation results (full table)</h2>
 
-    <div class="table-wrap" id="wrap" style="display:none;">
-      <table class="metrics-wide">
+    <div class="table-wrap">
+      <table class="metrics-wide" aria-label="Evaluation metrics table">
         <thead>
           <tr>
             <th>Model</th>
@@ -151,69 +164,143 @@
             <th>Peak R²</th>
           </tr>
         </thead>
-        <tbody id="body"></tbody>
+
+        <tbody>
+          <tr>
+            <td><b>FINAL_SWITCH_RESIDUAL</b></td>
+            <td>520.004</td>
+            <td>672.238</td>
+            <td>0.974595</td>
+            <td>0.973073</td>
+            <td>0.994858</td>
+            <td>598.708</td>
+            <td>825.228</td>
+            <td>0.875923</td>
+            <td>0.882561</td>
+            <td>0.368196</td>
+          </tr>
+          <tr>
+            <td><b>LSTM</b></td>
+            <td>521.314</td>
+            <td>674.659</td>
+            <td>0.976412</td>
+            <td>0.974922</td>
+            <td>0.994821</td>
+            <td>611.755</td>
+            <td>844.671</td>
+            <td>0.894026</td>
+            <td>0.900979</td>
+            <td>0.338075</td>
+          </tr>
+          <tr>
+            <td><b>ENS_NNLS</b></td>
+            <td>521.314</td>
+            <td>674.659</td>
+            <td>0.976412</td>
+            <td>0.974922</td>
+            <td>0.994821</td>
+            <td>611.755</td>
+            <td>844.671</td>
+            <td>0.894026</td>
+            <td>0.900979</td>
+            <td>0.338075</td>
+          </tr>
+          <tr>
+            <td><b>ENS_RESIDUAL_LSTM</b></td>
+            <td>677.403</td>
+            <td>844.527</td>
+            <td>1.256350</td>
+            <td>1.257757</td>
+            <td>0.991878</td>
+            <td>548.478</td>
+            <td>707.845</td>
+            <td>0.807392</td>
+            <td>0.812104</td>
+            <td>0.535728</td>
+          </tr>
+          <tr>
+            <td><b>ENS_WEIGHTED_RIDGE</b></td>
+            <td>714.008</td>
+            <td>903.807</td>
+            <td>1.331670</td>
+            <td>1.329567</td>
+            <td>0.990700</td>
+            <td>599.624</td>
+            <td>771.685</td>
+            <td>0.885109</td>
+            <td>0.887545</td>
+            <td>0.448092</td>
+          </tr>
+          <tr>
+            <td><b>ENS_STACK_RIDGE</b></td>
+            <td>782.643</td>
+            <td>966.227</td>
+            <td>1.458580</td>
+            <td>1.461446</td>
+            <td>0.989381</td>
+            <td>884.647</td>
+            <td>1,027.087</td>
+            <td>1.295630</td>
+            <td>1.309887</td>
+            <td>0.022663</td>
+          </tr>
+          <tr>
+            <td><b>ENS_MEAN</b></td>
+            <td>12,038.994</td>
+            <td>13,022.653</td>
+            <td>22.141600</td>
+            <td>26.141533</td>
+            <td>-0.935416</td>
+            <td>17,730.677</td>
+            <td>17,849.006</td>
+            <td>25.917700</td>
+            <td>28.505041</td>
+            <td>-294.034713</td>
+          </tr>
+          <tr>
+            <td><b>ENS_MEDIAN</b></td>
+            <td>13,765.326</td>
+            <td>15,500.325</td>
+            <td>24.932400</td>
+            <td>30.522515</td>
+            <td>-1.740232</td>
+            <td>21,936.467</td>
+            <td>22,091.510</td>
+            <td>31.766900</td>
+            <td>34.999328</td>
+            <td>-450.714302</td>
+          </tr>
+          <tr>
+            <td><b>Hybrid</b></td>
+            <td>22,375.808</td>
+            <td>23,607.357</td>
+            <td>40.466200</td>
+            <td>51.852154</td>
+            <td>-5.358216</td>
+            <td>40,488.133</td>
+            <td>40,644.241</td>
+            <td>58.978700</td>
+            <td>63.357563</td>
+            <td>-1,581.471946</td>
+          </tr>
+          <tr>
+            <td><b>SARIMA</b></td>
+            <td>12,135.796</td>
+            <td>13,997.344</td>
+            <td>22.438000</td>
+            <td>28.175606</td>
+            <td>-0.211421</td>
+            <td>22,255.848</td>
+            <td>22,391.407</td>
+            <td>32.283100</td>
+            <td>36.141095</td>
+            <td>-463.148014</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </section>
 </main>
-
-<script>
-  function toNum(x){ const n = Number(x); return Number.isFinite(n) ? n : null; }
-  function fmt(x){
-    const n = toNum(x);
-    if (n === null) return "";
-    return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
-  }
-  function parseCSV(text){
-    const lines = text.trim().split(/\r?\n/);
-    const header = lines[0].split(",").map(s => s.trim());
-    const rows = [];
-    for (let i=1;i<lines.length;i++){
-      if (!lines[i].trim()) continue;
-      const cols = lines[i].split(",").map(s => s.trim());
-      const obj = {};
-      header.forEach((h, idx) => obj[h] = cols[idx]);
-      rows.push(obj);
-    }
-    return rows;
-  }
-
-  async function loadTable(){
-    const state = document.getElementById("state");
-    const wrap  = document.getElementById("wrap");
-    const body  = document.getElementById("body");
-
-    try{
-      const res = await fetch("../assets/data/final_metrics_table_eval.csv", { cache: "no-store" });
-      if (!res.ok) throw new Error("csv not found");
-      const txt = await res.text();
-      const rows = parseCSV(txt);
-
-      body.innerHTML = rows.map(r => `
-        <tr>
-          <td><b>${(r.model || "").trim()}</b></td>
-          <td>${fmt(r["Overall_MAE"])}</td>
-          <td>${fmt(r["Overall_RMSE"])}</td>
-          <td>${fmt(r["Overall_MAPE(%)"])}</td>
-          <td>${fmt(r["Overall_sMAPE(%)"])}</td>
-          <td>${fmt(r["Overall_R2"])}</td>
-          <td>${fmt(r["Peak_MAE"])}</td>
-          <td>${fmt(r["Peak_RMSE"])}</td>
-          <td>${fmt(r["Peak_MAPE(%)"])}</td>
-          <td>${fmt(r["Peak_sMAPE(%)"])}</td>
-          <td>${fmt(r["Peak_R2"])}</td>
-        </tr>
-      `).join("");
-
-      state.style.display = "none";
-      wrap.style.display = "block";
-    }catch(e){
-      state.textContent = "Evaluation CSV could not be loaded. Ensure it exists in assets/data.";
-    }
-  }
-
-  loadTable();
-</script>
 
 <script src="../assets/app.js"></script>
 </body>

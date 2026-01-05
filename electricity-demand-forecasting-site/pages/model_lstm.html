@@ -154,11 +154,7 @@
     <div class="summary-box">
       <h2 style="margin:0 0 8px;">Model summary (from your notebook code)</h2>
       <p class="muted" style="margin:0;">
-        Your notebook builds sequences with a 24-step lookback window. Features are scaled with RobustScaler and the
-        target is scaled with MinMaxScaler. The network is:
-        Input(seq_length, n_features) → LSTM(64, return_sequences=True, dropout=0.2) → LSTM(32, dropout=0.2)
-        → Dense(16, ReLU) → Dropout(0.2) → Dense(1). Training uses Adam (lr=0.001) with MSE loss and MAE metric,
-        plus EarlyStopping / ReduceLROnPlateau / ModelCheckpoint.
+        LSTM is implemented for hourly electricity demand forecasting using the processed dataset with utc_timestamp as the datetime index and target_load as the prediction target, while all remaining variables are used as input features. A strict time-based split is applied, with training on data from 2015–2017 and evaluation on 2018, and the training set is further divided into training and validation subsets. Input features are scaled using RobustScaler and the target using MinMaxScaler, and temporal dependencies are captured using 24-hour sliding input sequences. The model uses a stacked LSTM architecture with two layers (64 and 32 units), followed by dense layers with dropout regularization, and is trained with the Adam optimizer and mean squared error loss, using early stopping and learning-rate reduction for stability. The model generates hourly forecasts for the test period, compares predicted and actual demand, analyzes residual and peak-load behavior, and evaluates performance using standard metrics such as MAE, RMSE, MAPE/sMAPE, bias, and R².
       </p>
     </div>
   </section>

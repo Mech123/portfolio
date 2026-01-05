@@ -149,12 +149,8 @@
     </div>
 
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Model summary (from your notebook code)</h2>
       <p class="muted" style="margin:0;">
-        Your notebook fits a SARIMA model with order (1,1,1) and seasonal_order (1,1,1,24). Residuals from SARIMA are then
-        modeled using an LSTM residual network with a 24-hour lookback window:
-        LSTM(64, return_sequences=True, dropout=0.2) → LSTM(32, dropout=0.2) → Dense(16, ReLU) → Dropout(0.2) → Dense(1).
-        Final prediction = SARIMA prediction + predicted residual.
+        Hybrid SARIMA+LSTM is implemented as a two-stage residual-correction model for hourly electricity demand forecasting (Germany, 2015–2018). First, a univariate SARIMA(1,1,1)(1,1,1,24) model forecasts the target_load series using a strict time split (train: 2015–2017, test: 2018). Residuals (actual − SARIMA forecast) are then learned by a stacked LSTM using 24-hour sliding windows over the multivariate input features (scaled with RobustScaler) and residual target (scaled separately). The LSTM uses two recurrent layers (64 and 32 units) with dropout and dense layers, trained with Adam and stabilized using early stopping and learning-rate reduction. Final hybrid predictions are created by adding the predicted residuals back to the SARIMA baseline, and performance is evaluated with overall error metrics plus peak-load focused analysis using a 90th-percentile threshold.
       </p>
     </div>
   </section>

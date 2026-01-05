@@ -118,9 +118,7 @@
     <div class="summary-box">
       <h2 style="margin:0 0 8px;">Summary (from your notebook logic + computed bias)</h2>
       <p class="muted" style="margin:0;">
-        The SARIMA baseline fits recurring seasonality, but it performs poorly when the test period shifts away from
-        the training distribution and during sharp peak events. In the forecasts file, the mean bias (actual − forecast)
-        indicates under/over prediction behavior directly; peaks degrade further because SARIMA smooths abrupt changes.
+        SARIMA is implemented as a classical baseline for hourly electricity demand forecasting in Germany (2015–2018). The workflow loads the preprocessed time series, enforces a datetime index, and applies a time-based split (train: 2015–2017, test: 2018). Seasonality and stationarity are examined using visual analysis, ADF/KPSS tests, and ACF/PACF plots. Due to computational constraints, automated order search is skipped, and a manually specified SARIMA(1,1,1)(1,1,1,24) configuration is trained on a reduced window for efficiency. The model produces forecasts for 2018, compares predicted and actual demand through plots, analyzes residual behavior, and evaluates performance using standard metrics such as MAE, RMSE, MAPE/sMAPE, bias, and R².
       </p>
     </div>
   </section>
