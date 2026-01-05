@@ -6,10 +6,10 @@
   <title>Models & Results</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/style.css" />
+  <!-- IMPORTANT: pages/* must use ../assets -->
+  <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
-    /* Make model cards more interactive + remove path-text vibe */
     .model-grid { display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:14px; }
     @media (max-width: 1200px){ .model-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 720px){ .model-grid { grid-template-columns: 1fr; } }
@@ -32,6 +32,8 @@
     .model-card .top{
       display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
       margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
     }
     .model-title{
       display:flex; align-items:center; gap:10px;
@@ -45,8 +47,10 @@
       color: var(--text-muted);
       background: rgba(15,23,42,.02);
       white-space: nowrap;
+      position: relative;
+      z-index: 1;
     }
-    .model-desc{ color: var(--text-muted); margin: 0; line-height: 1.45; }
+    .model-desc{ color: var(--text-muted); margin: 0; line-height: 1.45; position: relative; z-index: 1; }
 
     .accent{
       position:absolute; inset:0;
@@ -59,7 +63,7 @@
     .accent.hybrid{ background: radial-gradient(800px 220px at 20% -10%, rgba(245,158,11,.20), transparent 55%); }
     .accent.ensemble{ background: radial-gradient(800px 220px at 20% -10%, rgba(236,72,153,.18), transparent 55%); }
 
-    .cta-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; }
+    .cta-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; position: relative; z-index: 1; }
     .cta-row a.btn { margin:0; }
 
     .table-wrap{ overflow:auto; border:1px solid var(--border); border-radius: 12px; background:#fff; }
@@ -81,6 +85,7 @@
       z-index: 1;
     }
     table.metrics-wide tr:last-child td{ border-bottom: none; }
+
     .muted-small{ color: var(--text-muted); font-size: 13px; }
   </style>
 </head>
@@ -100,7 +105,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -125,8 +130,8 @@
     <h1>Models & Results</h1>
 
     <p class="muted">
-      We compare SARIMA, LSTM, Hybrid (SARIMA + LSTM residual), and Ensemble approaches. Each model page includes metrics,
-      predictions, and figures.
+      We compared SARIMA, LSTM, Hybrid (SARIMA + LSTM residual), and Ensemble approaches. Each model page contains its
+      own metrics, predictions, and figures.
     </p>
 
     <div class="model-grid" style="margin-top: 12px;">
@@ -148,7 +153,7 @@
           <h3 class="model-title"><i class="bi bi-cpu"></i> LSTM</h3>
           <span class="badge">Deep Learning</span>
         </div>
-        <p class="model-desc">Sequence model to learn non-linear patterns from history + engineered features.</p>
+        <p class="model-desc">Sequence model for non-linear patterns from history + engineered features.</p>
         <div class="cta-row">
           <a class="btn" href="model_lstm.html"><i class="bi bi-box-arrow-up-right"></i> Open page</a>
         </div>
@@ -160,7 +165,7 @@
           <h3 class="model-title"><i class="bi bi-layers"></i> Hybrid</h3>
           <span class="badge">SARIMA + LSTM Residual</span>
         </div>
-        <p class="model-desc">Combines SARIMA baseline with LSTM residual learning.</p>
+        <p class="model-desc">SARIMA baseline + LSTM learns residual errors to improve peaks/regimes.</p>
         <div class="cta-row">
           <a class="btn" href="model_hybrid.html"><i class="bi bi-box-arrow-up-right"></i> Open page</a>
         </div>
@@ -172,7 +177,7 @@
           <h3 class="model-title"><i class="bi bi-diagram-2"></i> Ensemble</h3>
           <span class="badge">Combination</span>
         </div>
-        <p class="model-desc">Aggregates predictions across models/strategies for stability.</p>
+        <p class="model-desc">Evaluation table includes ensemble variants (FINAL_SWITCH_RESIDUAL, ENS_NNLS, etc.).</p>
         <div class="cta-row">
           <a class="btn" href="model_ensemble.html"><i class="bi bi-box-arrow-up-right"></i> Open page</a>
         </div>
@@ -182,11 +187,11 @@
 
   <section class="card">
     <h2>Overview metrics (evaluation)</h2>
-    <p class="muted-small" style="margin-top:-6px;">
-      Loaded from <code>./assets/data/final_metrics_table_eval.csv</code>.
+    <p class="muted-small">
+      Table is loaded from the uploaded evaluation CSV (no manual copy/paste in HTML).
     </p>
 
-    <div id="metricsState" class="muted">Loading table…</div>
+    <div id="metricsState" class="muted">Loading metrics table…</div>
 
     <div class="table-wrap" id="metricsWrap" style="display:none;">
       <table class="metrics-wide" id="metricsTable">
@@ -208,33 +213,6 @@
         <tbody id="metricsBody"></tbody>
       </table>
     </div>
-
-    <div style="margin-top:14px;">
-      <h3 style="margin:0 0 8px;">Ensemble variants (full table)</h3>
-      <p class="muted-small" style="margin-top:-4px;">
-        Ensemble page uses the full evaluation table (including ensemble variants like <code>FINAL_SWITCH_RESIDUAL</code>, <code>ENS_NNLS</code>, etc.).
-      </p>
-      <div class="table-wrap" id="ensWrap" style="display:none;">
-        <table class="metrics-wide" id="ensTable">
-          <thead>
-            <tr>
-              <th>Model</th>
-              <th>Overall MAE</th>
-              <th>Overall RMSE</th>
-              <th>Overall MAPE (%)</th>
-              <th>Overall sMAPE (%)</th>
-              <th>Overall R²</th>
-              <th>Peak MAE</th>
-              <th>Peak RMSE</th>
-              <th>Peak MAPE (%)</th>
-              <th>Peak sMAPE (%)</th>
-              <th>Peak R²</th>
-            </tr>
-          </thead>
-          <tbody id="ensBody"></tbody>
-        </table>
-      </div>
-    </div>
   </section>
 </main>
 
@@ -243,14 +221,13 @@
     const n = Number(x);
     return Number.isFinite(n) ? n : null;
   }
-
   function fmt(x){
     const n = toNum(x);
     if (n === null) return "";
-    // Keep your precision readable
     return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
   }
 
+  // Robust-ish CSV for this numeric table (no quoted commas in your file)
   function parseCSV(text){
     const lines = text.trim().split(/\r?\n/);
     const header = lines[0].split(",").map(s => s.trim());
@@ -267,42 +244,20 @@
 
   async function loadEvalTable(){
     const state = document.getElementById("metricsState");
-    const wrap = document.getElementById("metricsWrap");
-    const body = document.getElementById("metricsBody");
-
-    const ensWrap = document.getElementById("ensWrap");
-    const ensBody = document.getElementById("ensBody");
+    const wrap  = document.getElementById("metricsWrap");
+    const body  = document.getElementById("metricsBody");
 
     try{
-      const res = await fetch("./assets/data/final_metrics_table_eval.csv", { cache: "no-store" });
-      if (!res.ok) throw new Error("final_metrics_table_eval.csv not found");
+      // IMPORTANT: pages/* must use ../assets
+      const res = await fetch("../assets/data/final_metrics_table_eval.csv", { cache: "no-store" });
+      if (!res.ok) throw new Error("csv not found");
       const txt = await res.text();
       const rows = parseCSV(txt);
 
-      // Main comparison: SARIMA, LSTM, HYBRID, and best ensemble (FINAL_SWITCH_RESIDUAL)
-      const wantMain = new Set(["SARIMA", "LSTM", "HYBRID", "FINAL_SWITCH_RESIDUAL"]);
-      const mainRows = rows.filter(r => wantMain.has((r.model || "").trim()));
-
-      body.innerHTML = mainRows.map(r => `
+      // You asked: keep full table (including all ensemble variants)
+      body.innerHTML = rows.map(r => `
         <tr>
-          <td><b>${r.model}</b></td>
-          <td>${fmt(r["Overall_MAE"])}</td>
-          <td>${fmt(r["Overall_RMSE"])}</td>
-          <td>${fmt(r["Overall_MAPE(%)"])}</td>
-          <td>${fmt(r["Overall_sMAPE(%)"])}</td>
-          <td>${fmt(r["Overall_R2"])}</td>
-          <td>${fmt(r["Peak_MAE"])}</td>
-          <td>${fmt(r["Peak_RMSE"])}</td>
-          <td>${fmt(r["Peak_MAPE(%)"])}</td>
-          <td>${fmt(r["Peak_sMAPE(%)"])}</td>
-          <td>${fmt(r["Peak_R2"])}</td>
-        </tr>
-      `).join("");
-
-      // Full ensemble table: keep ALL rows from the CSV (as you requested on models page)
-      ensBody.innerHTML = rows.map(r => `
-        <tr>
-          <td><b>${r.model}</b></td>
+          <td><b>${(r.model || "").trim()}</b></td>
           <td>${fmt(r["Overall_MAE"])}</td>
           <td>${fmt(r["Overall_RMSE"])}</td>
           <td>${fmt(r["Overall_MAPE(%)"])}</td>
@@ -318,15 +273,15 @@
 
       state.style.display = "none";
       wrap.style.display = "block";
-      ensWrap.style.display = "block";
     }catch(e){
-      state.textContent = "Could not load evaluation table. Check: ./assets/data/final_metrics_table_eval.csv";
+      // No path/debug text
+      state.textContent = "Metrics table could not be loaded. Ensure the evaluation CSV exists in assets/data.";
     }
   }
 
   loadEvalTable();
 </script>
 
-<script src="./assets/app.js"></script>
+<script src="../assets/app.js"></script>
 </body>
 </html>

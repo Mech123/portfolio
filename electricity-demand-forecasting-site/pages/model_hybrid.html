@@ -1,4 +1,3 @@
-<!-- pages/model_hybrid.html (UPDATED) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,7 +6,7 @@
   <title>Hybrid – Model</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
@@ -76,34 +75,13 @@
     .figcap .title { margin:0 0 6px 0; font-weight: 600; }
     .figcap .desc { margin:0; color: var(--text-muted); }
 
-    /* Simple image modal */
-    .img-modal{
-      position:fixed; inset:0; background: rgba(0,0,0,.72);
-      display:none; align-items:center; justify-content:center;
-      padding: 22px; z-index: 9999;
-    }
+    /* modal */
+    .img-modal{ position:fixed; inset:0; background: rgba(0,0,0,.72); display:none; align-items:center; justify-content:center; padding: 22px; z-index: 9999; }
     .img-modal.open{ display:flex; }
-    .img-modal-card{
-      max-width: min(1100px, 96vw);
-      max-height: 92vh;
-      width: 100%;
-      background:#111827;
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 24px 80px rgba(0,0,0,.45);
-    }
-    .img-modal-top{
-      display:flex; align-items:center; justify-content:space-between;
-      padding: 10px 12px; color:#e5e7eb; gap:12px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
+    .img-modal-card{ max-width: min(1100px, 96vw); max-height: 92vh; width: 100%; background:#111827; border-radius: 14px; overflow:hidden; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 24px 80px rgba(0,0,0,.45); }
+    .img-modal-top{ display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; color:#e5e7eb; gap:12px; border-bottom: 1px solid rgba(255,255,255,.10); }
     .img-modal-top .cap{ font-size: 13px; color: #d1d5db; }
-    .img-modal-top button{
-      border:1px solid rgba(255,255,255,.18);
-      background: transparent; color:#fff; border-radius: 10px;
-      padding: 6px 10px; cursor:pointer;
-    }
+    .img-modal-top button{ border:1px solid rgba(255,255,255,.18); background: transparent; color:#fff; border-radius: 10px; padding: 6px 10px; cursor:pointer; }
     .img-modal-body{ background:#0b1220; display:flex; align-items:center; justify-content:center; }
     .img-modal-body img{ max-width: 100%; max-height: 82vh; width:auto; height:auto; display:block; }
   </style>
@@ -124,7 +102,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -145,11 +123,10 @@
 </aside>
 
 <main class="content">
-  <!-- Header / Summary -->
   <section class="card">
-    <h1 style="margin:0;">Hybrid (SARIMA + LSTM Residual)</h1>
+    <h1 style="margin:0;">Hybrid (SARIMA + LSTM residual)</h1>
     <p class="muted" style="margin-top:10px;">
-      Hybrid model = SARIMA baseline forecast + LSTM model that learns residual errors.
+      Hybrid model where SARIMA provides a baseline forecast and an LSTM learns residual errors.
     </p>
 
     <div class="tabs">
@@ -160,40 +137,32 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="./assets/data/hybrid/metrics_hybrid.json" target="_blank" rel="noopener">
+      <a class="pill" href="../assets/data/hybrid/metrics_hybrid.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Open metrics JSON
       </a>
-      <a class="pill" href="./assets/data/hybrid/hybrid_predictions.csv" target="_blank" rel="noopener">
+      <a class="pill" href="../assets/data/hybrid/hybrid_predictions.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Open predictions CSV
-      </a>
-      <a class="pill" href="./assets/data/hybrid/best_residual_model.h5" target="_blank" rel="noopener">
-        <i class="bi bi-box"></i> Residual model (H5)
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/hybrid_model.ipynb" target="_blank" rel="noopener">
         <i class="bi bi-journal-code"></i> Notebook (GitHub)
       </a>
     </div>
 
-    <!-- Notebook-derived paragraph (only from code values in your hybrid notebook) -->
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Model summary (from your notebook implementation)</h2>
+      <h2 style="margin:0 0 8px;">Model summary (from your notebook code)</h2>
       <p class="muted" style="margin:0;">
-        The SARIMA baseline is fit with order (1, 1, 1) and seasonal_order (1, 1, 1, 24). Residuals are then modeled using
-        an LSTM residual network with a 24-hour lookback. Features and residual targets are scaled using RobustScaler.
-        The residual model architecture is:
-        Input(lookback, n_features) → LSTM(64, return_sequences=True, dropout=0.2) → LSTM(32, dropout=0.2) → Dense(16, ReLU) →
-        Dropout(0.2) → Dense(1). Training uses Adam (learning_rate=0.001) with MSE loss and MAE metric, plus EarlyStopping,
-        ReduceLROnPlateau, and ModelCheckpoint callbacks.
+        Your notebook fits a SARIMA model with order (1,1,1) and seasonal_order (1,1,1,24). Residuals from SARIMA are then
+        modeled using an LSTM residual network with a 24-hour lookback window:
+        LSTM(64, return_sequences=True, dropout=0.2) → LSTM(32, dropout=0.2) → Dense(16, ReLU) → Dropout(0.2) → Dense(1).
+        Final prediction = SARIMA prediction + predicted residual.
       </p>
     </div>
   </section>
 
-  <!-- Metrics -->
   <section class="card">
     <h2>Metrics</h2>
     <p class="muted" style="margin-top:6px;">
-      Values are loaded from <code>./assets/data/hybrid/metrics_hybrid.json</code> and computed from
-      <code>./assets/data/hybrid/hybrid_predictions.csv</code>.
+      Metrics are taken from your Hybrid files: <code>metrics_hybrid.json</code> and computed from <code>hybrid_predictions.csv</code>.
     </p>
 
     <div class="grid-2">
@@ -204,14 +173,12 @@
         <div class="kpi-grid" id="csvKpis" style="display:none;">
           <div class="kpi"><p class="label">Overall MAE</p><p class="value" id="kpiMaeAll">–</p></div>
           <div class="kpi"><p class="label">Overall RMSE</p><p class="value" id="kpiRmseAll">–</p></div>
-          <div class="kpi"><p class="label">Peak MAE (is_peak=True)</p><p class="value" id="kpiMaePeak">–</p></div>
-          <div class="kpi"><p class="label">Peak RMSE (is_peak=True)</p><p class="value" id="kpiRmsePeak">–</p></div>
+          <div class="kpi"><p class="label">Peak MAE</p><p class="value" id="kpiMaePeak">–</p></div>
+          <div class="kpi"><p class="label">Peak RMSE</p><p class="value" id="kpiRmsePeak">–</p></div>
         </div>
 
         <table class="metrics" id="csvTable" style="display:none;">
-          <thead>
-            <tr><th>Metric</th><th>Value</th></tr>
-          </thead>
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
           <tbody id="csvBody"></tbody>
         </table>
       </div>
@@ -221,61 +188,40 @@
         <div id="metricsState" class="muted">Loading metrics…</div>
 
         <table class="metrics" id="metricsTable" style="display:none;">
-          <thead>
-            <tr><th>Metric</th><th>Value</th></tr>
-          </thead>
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
           <tbody id="metricsBody"></tbody>
         </table>
       </div>
     </div>
   </section>
 
-  <!-- Figures (keep the same images you already referenced in your uploaded HTML) -->
   <section class="card">
     <h2>Figures</h2>
     <p class="muted">Click any image to enlarge.</p>
 
+    <!-- If you add hybrid plots later, keep file names consistent inside assets/images/models/hybrid/ -->
     <div class="gallery">
       <div class="figure">
         <img data-modal="true" data-caption="training_history_hybrid.png" alt="training_history_hybrid"
-             src="./assets/images/models/hybrid/training_history_hybrid.png">
+             src="../assets/images/models/hybrid/training_history_hybrid.png">
         <div class="figcap">
           <p class="title">training_history_hybrid.png</p>
-          <p class="desc">Residual LSTM training dynamics.</p>
-        </div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="hybrid_timeseries_first14days.png" alt="hybrid_timeseries_first14days"
-             src="./assets/images/models/hybrid/hybrid_timeseries_first14days.png">
-        <div class="figcap">
-          <p class="title">hybrid_timeseries_first14days.png</p>
-          <p class="desc">Hybrid forecast vs actual (first 14 days).</p>
-        </div>
-      </div>
-
-      <div class="figure">
-        <img data-modal="true" data-caption="hybrid_timeseries_first30days.png" alt="hybrid_timeseries_first30days"
-             src="./assets/images/models/hybrid/hybrid_timeseries_first30days.png">
-        <div class="figcap">
-          <p class="title">hybrid_timeseries_first30days.png</p>
-          <p class="desc">Hybrid forecast vs actual (first 30 days).</p>
+          <p class="desc">Hybrid residual LSTM training history.</p>
         </div>
       </div>
 
       <div class="figure">
         <img data-modal="true" data-caption="predictions_visualization_hybrid.png" alt="predictions_visualization_hybrid"
-             src="./assets/images/models/hybrid/predictions_visualization_hybrid.png">
+             src="../assets/images/models/hybrid/predictions_visualization_hybrid.png">
         <div class="figcap">
           <p class="title">predictions_visualization_hybrid.png</p>
-          <p class="desc">Predictions visualization.</p>
+          <p class="desc">Hybrid actual vs predicted visualization.</p>
         </div>
       </div>
     </div>
   </section>
 </main>
 
-<!-- Image Modal -->
 <div class="img-modal" id="imgModal" role="dialog" aria-modal="true" aria-label="Image preview">
   <div class="img-modal-card">
     <div class="img-modal-top">
@@ -288,29 +234,15 @@
   </div>
 </div>
 
-<script src="./assets/app.js"></script>
-
 <script>
-  // -------- helpers --------
-  function toNum(x){
-    const n = Number(x);
-    return Number.isFinite(n) ? n : null;
-  }
+  function toNum(x){ const n = Number(x); return Number.isFinite(n) ? n : null; }
   function fmt(x, d=3){
     if (x === null || x === undefined) return "N/A";
     if (!Number.isFinite(x)) return "N/A";
     return x.toFixed(d);
   }
-  function mae(y, yhat){
-    let s=0, c=0;
-    for (let i=0;i<y.length;i++){ s += Math.abs(y[i]-yhat[i]); c++; }
-    return c ? s/c : null;
-  }
-  function rmse(y, yhat){
-    let s=0, c=0;
-    for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; c++; }
-    return c ? Math.sqrt(s/c) : null;
-  }
+  function mae(y, yhat){ let s=0; for (let i=0;i<y.length;i++) s += Math.abs(y[i]-yhat[i]); return y.length ? s/y.length : null; }
+  function rmse(y, yhat){ let s=0; for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; } return y.length ? Math.sqrt(s/y.length) : null; }
   function mape(y, yhat){
     let s=0, c=0;
     for (let i=0;i<y.length;i++){
@@ -344,15 +276,14 @@
     return 1 - (ssRes/ssTot);
   }
 
-  // -------- load metrics_hybrid.json --------
   async function loadJsonMetrics(){
     const state = document.getElementById("metricsState");
     const table = document.getElementById("metricsTable");
     const body = document.getElementById("metricsBody");
 
     try{
-      const res = await fetch("./assets/data/hybrid/metrics_hybrid.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("metrics_hybrid.json not found");
+      const res = await fetch("../assets/data/hybrid/metrics_hybrid.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("json not found");
       const data = await res.json();
 
       const rows = [];
@@ -365,44 +296,8 @@
       state.style.display = "none";
       table.style.display = "table";
     }catch(e){
-      state.textContent = "Could not load metrics. Check: assets/data/hybrid/metrics_hybrid.json";
+      state.textContent = "Could not load metrics_hybrid.json.";
     }
-  }
-
-  // -------- load hybrid_predictions.csv and compute overall + peak metrics --------
-  function parseCsv(text){
-    // Simple CSV parser (handles quoted fields)
-    const rows = [];
-    let i=0, field="", row=[], inQuotes=false;
-    while (i < text.length){
-      const ch = text[i];
-
-      if (inQuotes){
-        if (ch === '"' && text[i+1] === '"'){ field += '"'; i += 2; continue; }
-        if (ch === '"'){ inQuotes = false; i++; continue; }
-        field += ch; i++; continue;
-      } else {
-        if (ch === '"'){ inQuotes = true; i++; continue; }
-        if (ch === ','){ row.push(field); field=""; i++; continue; }
-        if (ch === '\n'){
-          row.push(field); field="";
-          if (row.length > 1 || (row.length===1 && row[0].trim()!=="")) rows.push(row);
-          row=[]; i++; continue;
-        }
-        if (ch === '\r'){ i++; continue; }
-        field += ch; i++; continue;
-      }
-    }
-    if (field.length || row.length){
-      row.push(field);
-      if (row.length > 1 || (row.length===1 && row[0].trim()!=="")) rows.push(row);
-    }
-    return rows;
-  }
-
-  function toBool(x){
-    const s = String(x).trim().toLowerCase();
-    return (s === "true" || s === "1" || s === "yes");
   }
 
   async function loadCsvMetrics(){
@@ -412,29 +307,33 @@
     const kpis = document.getElementById("csvKpis");
 
     try{
-      const res = await fetch("./assets/data/hybrid/hybrid_predictions.csv", { cache: "no-store" });
-      if (!res.ok) throw new Error("hybrid_predictions.csv not found");
+      const res = await fetch("../assets/data/hybrid/hybrid_predictions.csv", { cache: "no-store" });
+      if (!res.ok) throw new Error("csv not found");
       const text = await res.text();
 
-      const rows = parseCsv(text);
-      const header = rows[0].map(h => h.trim());
+      const lines = text.trim().split(/\r?\n/);
+      const header = lines[0].split(",").map(s => s.trim());
       const idxActual = header.indexOf("actual");
       const idxPred   = header.indexOf("predicted");
       const idxPeak   = header.indexOf("is_peak");
 
-      if (idxActual < 0 || idxPred < 0) throw new Error("Missing required columns: actual, predicted");
+      if (idxActual < 0 || idxPred < 0) throw new Error("Missing actual/predicted columns");
 
-      const data = rows.slice(1);
       const yAll=[], yhatAll=[], yPeak=[], yhatPeak=[];
-
-      for (const r of data){
-        const a = toNum(r[idxActual]);
-        const p = toNum(r[idxPred]);
+      for (let i=1;i<lines.length;i++){
+        if (!lines[i].trim()) continue;
+        const cols = lines[i].split(",");
+        const a = toNum(cols[idxActual]);
+        const p = toNum(cols[idxPred]);
         if (a === null || p === null) continue;
 
         yAll.push(a); yhatAll.push(p);
 
-        const isPeak = (idxPeak >= 0) ? toBool(r[idxPeak]) : false;
+        let isPeak = false;
+        if (idxPeak >= 0){
+          const v = String(cols[idxPeak]).trim().toLowerCase();
+          isPeak = (v === "1" || v === "true" || v === "yes");
+        }
         if (isPeak){ yPeak.push(a); yhatPeak.push(p); }
       }
 
@@ -444,8 +343,8 @@
         "Overall MAPE (%)": mape(yAll, yhatAll),
         "Overall sMAPE (%)": smape(yAll, yhatAll),
         "Overall R²": r2(yAll, yhatAll),
-        "Peak MAE (is_peak=True)": yPeak.length ? mae(yPeak, yhatPeak) : null,
-        "Peak RMSE (is_peak=True)": yPeak.length ? rmse(yPeak, yhatPeak) : null,
+        "Peak MAE": yPeak.length ? mae(yPeak, yhatPeak) : null,
+        "Peak RMSE": yPeak.length ? rmse(yPeak, yhatPeak) : null,
         "Peak MAPE (%)": yPeak.length ? mape(yPeak, yhatPeak) : null,
         "Peak sMAPE (%)": yPeak.length ? smape(yPeak, yhatPeak) : null,
         "Peak R²": yPeak.length ? r2(yPeak, yhatPeak) : null,
@@ -453,16 +352,14 @@
         "Rows used (peak)": yPeak.length
       };
 
-      // KPI cards
       document.getElementById("kpiMaeAll").textContent  = fmt(out["Overall MAE"]);
       document.getElementById("kpiRmseAll").textContent = fmt(out["Overall RMSE"]);
-      document.getElementById("kpiMaePeak").textContent = fmt(out["Peak MAE (is_peak=True)"]);
-      document.getElementById("kpiRmsePeak").textContent= fmt(out["Peak RMSE (is_peak=True)"]);
+      document.getElementById("kpiMaePeak").textContent = fmt(out["Peak MAE"]);
+      document.getElementById("kpiRmsePeak").textContent= fmt(out["Peak RMSE"]);
 
-      // Full table
       const order = [
         "Overall MAE","Overall RMSE","Overall MAPE (%)","Overall sMAPE (%)","Overall R²",
-        "Peak MAE (is_peak=True)","Peak RMSE (is_peak=True)","Peak MAPE (%)","Peak sMAPE (%)","Peak R²",
+        "Peak MAE","Peak RMSE","Peak MAPE (%)","Peak sMAPE (%)","Peak R²",
         "Rows used (overall)","Rows used (peak)"
       ];
 
@@ -476,11 +373,10 @@
       kpis.style.display = "grid";
       tbl.style.display = "table";
     }catch(e){
-      state.textContent = "Could not load CSV metrics. Check: assets/data/hybrid/hybrid_predictions.csv";
+      state.textContent = "Could not compute Hybrid metrics from CSV.";
     }
   }
 
-  // -------- image modal --------
   function initImageModal(){
     const modal = document.getElementById("imgModal");
     const modalImg = document.getElementById("imgModalImg");
@@ -506,10 +402,11 @@
     document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
   }
 
-  // Run
   loadJsonMetrics();
   loadCsvMetrics();
   initImageModal();
 </script>
+
+<script src="../assets/app.js"></script>
 </body>
 </html>

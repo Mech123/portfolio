@@ -6,7 +6,7 @@
   <title>SARIMA – Model</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
@@ -14,7 +14,9 @@
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
       text-decoration:none; color: var(--text-main); background:#fff;
+      transition: transform .12s ease, box-shadow .12s ease;
     }
+    .tab:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); }
     .tab.active { background: var(--primary); border-color: var(--primary); color:#fff; }
 
     .summary-box{
@@ -33,10 +35,20 @@
     .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
     @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
     .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
-    .figure img { width:100%; height:auto; display:block; }
+    .figure img { width:100%; height:auto; display:block; cursor: zoom-in; }
     .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
     .figcap .title { margin:0 0 6px 0; font-weight:700; }
     .figcap .desc { margin:0; color: var(--text-muted); }
+
+    /* modal */
+    .img-modal{ position:fixed; inset:0; background: rgba(0,0,0,.72); display:none; align-items:center; justify-content:center; padding: 22px; z-index: 9999; }
+    .img-modal.open{ display:flex; }
+    .img-modal-card{ max-width: min(1100px, 96vw); max-height: 92vh; width: 100%; background:#111827; border-radius: 14px; overflow:hidden; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 24px 80px rgba(0,0,0,.45); }
+    .img-modal-top{ display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; color:#e5e7eb; gap:12px; border-bottom: 1px solid rgba(255,255,255,.10); }
+    .img-modal-top .cap{ font-size: 13px; color: #d1d5db; }
+    .img-modal-top button{ border:1px solid rgba(255,255,255,.18); background: transparent; color:#fff; border-radius: 10px; padding: 6px 10px; cursor:pointer; }
+    .img-modal-body{ background:#0b1220; display:flex; align-items:center; justify-content:center; }
+    .img-modal-body img{ max-width: 100%; max-height: 82vh; width:auto; height:auto; display:block; }
   </style>
 </head>
 
@@ -55,7 +67,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -77,10 +89,10 @@
 
 <main class="content">
   <section class="card">
-    <h1>SARIMA</h1>
+    <h1 style="margin:0;">SARIMA</h1>
 
-    <p class="muted">
-      Statistical baseline capturing trend and seasonality.
+    <p class="muted" style="margin-top:10px;">
+      Statistical baseline capturing trend + seasonality (your notebook uses a weekly seasonal period: 24×7=168 hours).
     </p>
 
     <div class="tabs">
@@ -91,10 +103,10 @@
     </div>
 
     <div class="hero-actions" style="margin-top:12px;">
-      <a class="btn" href="./assets/data/sarima/sarima_metrics.json" target="_blank" rel="noopener">
+      <a class="btn" href="../assets/data/sarima/sarima_metrics.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Open metrics JSON
       </a>
-      <a class="btn" href="./assets/data/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
+      <a class="btn" href="../assets/data/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Open forecasts CSV
       </a>
       <a class="btn" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/sarima_model.ipynb" target="_blank" rel="noopener">
@@ -104,21 +116,21 @@
 
     <!-- Summary FIRST -->
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Summary</h2>
+      <h2 style="margin:0 0 8px;">Summary (from your notebook logic + computed bias)</h2>
       <p class="muted" style="margin:0;">
-        SARIMA shows strong seasonality fitting but poor generalization when the test distribution shifts and during sharp peak events.
-        On the forecasts CSV, the model has a large positive bias (actual − forecast), meaning it tends to under-predict demand, and
-        peak-region fit degrades significantly.
+        The SARIMA baseline fits recurring seasonality, but it performs poorly when the test period shifts away from
+        the training distribution and during sharp peak events. In the forecasts file, the mean bias (actual − forecast)
+        indicates under/over prediction behavior directly; peaks degrade further because SARIMA smooths abrupt changes.
       </p>
     </div>
   </section>
 
-  <!-- Metrics SECOND (from SARIMA forecasts CSV, not from eval table) -->
+  <!-- Metrics SECOND (from SARIMA forecasts CSV, not eval table) -->
   <section class="card">
     <h2>Metrics (computed from sarima_forecasts.csv)</h2>
-    <p class="muted">Source: <code>./assets/data/sarima/sarima_forecasts.csv</code> (overall + peak at p90 threshold of actual).</p>
+    <p class="muted">Overall + peak metrics (peak defined as p90 of actual in this CSV).</p>
 
-    <div id="mState" class="muted">Computing…</div>
+    <div id="mState" class="muted">Computing metrics…</div>
 
     <table class="metrics" id="mTable" style="display:none;">
       <thead><tr><th>Metric</th><th>Value</th></tr></thead>
@@ -131,89 +143,129 @@
     <h2>Figures</h2>
     <p class="muted">Click any image to enlarge.</p>
 
-    <!-- All 11 SARIMA screenshots in order (from your SARIMA figure set) -->
+    <!-- All 11 SARIMA screenshots in order -->
     <div class="gallery">
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/00_data_shift_analysis.png">
-          <img src="./assets/images/models/sarima/00_data_shift_analysis.png" alt="00_data_shift_analysis">
-        </a>
-        <div class="figcap"><p class="title">00 – Data shift analysis</p><p class="desc">Train vs test distribution and drift checks.</p></div>
+        <img data-modal="true" data-caption="00_data_shift_analysis.png" src="../assets/images/models/sarima/00_data_shift_analysis.png" alt="00_data_shift_analysis">
+        <div class="figcap"><p class="title">00_data_shift_analysis.png</p><p class="desc">Train vs test distribution and drift checks.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/01_time_series_overview.png">
-          <img src="./assets/images/models/sarima/01_time_series_overview.png" alt="01_time_series_overview">
-        </a>
-        <div class="figcap"><p class="title">01 – Time series overview</p><p class="desc">Full series with train/test split.</p></div>
+        <img data-modal="true" data-caption="01_time_series_overview.png" src="../assets/images/models/sarima/01_time_series_overview.png" alt="01_time_series_overview">
+        <div class="figcap"><p class="title">01_time_series_overview.png</p><p class="desc">Full series with train/test split.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/03_distribution_analysis.png">
-          <img src="./assets/images/models/sarima/03_distribution_analysis.png" alt="03_distribution_analysis">
-        </a>
-        <div class="figcap"><p class="title">03 – Distribution analysis</p><p class="desc">Load distribution and descriptive statistics.</p></div>
+        <img data-modal="true" data-caption="03_distribution_analysis.png" src="../assets/images/models/sarima/03_distribution_analysis.png" alt="03_distribution_analysis">
+        <div class="figcap"><p class="title">03_distribution_analysis.png</p><p class="desc">Load distribution and descriptive statistics.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/04_seasonal_decomposition.png">
-          <img src="./assets/images/models/sarima/04_seasonal_decomposition.png" alt="04_seasonal_decomposition">
-        </a>
-        <div class="figcap"><p class="title">04 – Seasonal decomposition</p><p class="desc">Trend/seasonal/residual components.</p></div>
+        <img data-modal="true" data-caption="04_seasonal_decomposition.png" src="../assets/images/models/sarima/04_seasonal_decomposition.png" alt="04_seasonal_decomposition">
+        <div class="figcap"><p class="title">04_seasonal_decomposition.png</p><p class="desc">Trend/seasonal/residual components.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/05_seasonal_patterns.png">
-          <img src="./assets/images/models/sarima/05_seasonal_patterns.png" alt="05_seasonal_patterns">
-        </a>
-        <div class="figcap"><p class="title">05 – Seasonal patterns</p><p class="desc">Daily and weekly seasonality behaviour.</p></div>
+        <img data-modal="true" data-caption="05_seasonal_patterns.png" src="../assets/images/models/sarima/05_seasonal_patterns.png" alt="05_seasonal_patterns">
+        <div class="figcap"><p class="title">05_seasonal_patterns.png</p><p class="desc">Daily and weekly seasonality behaviour.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/06_differencing.png">
-          <img src="./assets/images/models/sarima/06_differencing.png" alt="06_differencing">
-        </a>
-        <div class="figcap"><p class="title">06 – Differencing</p><p class="desc">Stationarity preparation via differencing.</p></div>
+        <img data-modal="true" data-caption="06_differencing.png" src="../assets/images/models/sarima/06_differencing.png" alt="06_differencing">
+        <div class="figcap"><p class="title">06_differencing.png</p><p class="desc">Stationarity preparation via differencing.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/07_acf_pacf_original.png">
-          <img src="./assets/images/models/sarima/07_acf_pacf_original.png" alt="07_acf_pacf_original">
-        </a>
-        <div class="figcap"><p class="title">07 – ACF / PACF</p><p class="desc">Autocorrelation diagnostics for SARIMA orders.</p></div>
+        <img data-modal="true" data-caption="07_acf_pacf_original.png" src="../assets/images/models/sarima/07_acf_pacf_original.png" alt="07_acf_pacf_original">
+        <div class="figcap"><p class="title">07_acf_pacf_original.png</p><p class="desc">Autocorrelation diagnostics for SARIMA orders.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/09_residual_analysis.png">
-          <img src="./assets/images/models/sarima/09_residual_analysis.png" alt="09_residual_analysis">
-        </a>
-        <div class="figcap"><p class="title">09 – Residual analysis</p><p class="desc">Residual checks (normality/autocorrelation).</p></div>
+        <img data-modal="true" data-caption="09_residual_analysis.png" src="../assets/images/models/sarima/09_residual_analysis.png" alt="09_residual_analysis">
+        <div class="figcap"><p class="title">09_residual_analysis.png</p><p class="desc">Residual checks.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/10_forecasts.png">
-          <img src="./assets/images/models/sarima/10_forecasts.png" alt="10_forecasts">
-        </a>
-        <div class="figcap"><p class="title">10 – Forecasts</p><p class="desc">Forecast vs actual (full and zoomed views).</p></div>
+        <img data-modal="true" data-caption="10_forecasts.png" src="../assets/images/models/sarima/10_forecasts.png" alt="10_forecasts">
+        <div class="figcap"><p class="title">10_forecasts.png</p><p class="desc">Forecast vs actual (full and zoomed).</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/11_forecast_scatter.png">
-          <img src="./assets/images/models/sarima/11_forecast_scatter.png" alt="11_forecast_scatter">
-        </a>
-        <div class="figcap"><p class="title">11 – Forecast scatter</p><p class="desc">Actual vs predicted scatter view.</p></div>
+        <img data-modal="true" data-caption="11_forecast_scatter.png" src="../assets/images/models/sarima/11_forecast_scatter.png" alt="11_forecast_scatter">
+        <div class="figcap"><p class="title">11_forecast_scatter.png</p><p class="desc">Actual vs predicted scatter.</p></div>
       </div>
 
       <div class="figure">
-        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/12_error_analysis.png">
-          <img src="./assets/images/models/sarima/12_error_analysis.png" alt="12_error_analysis">
-        </a>
-        <div class="figcap"><p class="title">12 – Error analysis</p><p class="desc">Error distribution and peak-specific errors.</p></div>
+        <img data-modal="true" data-caption="12_error_analysis.png" src="../assets/images/models/sarima/12_error_analysis.png" alt="12_error_analysis">
+        <div class="figcap"><p class="title">12_error_analysis.png</p><p class="desc">Error distribution and peak-specific errors.</p></div>
       </div>
     </div>
   </section>
 </main>
 
+<!-- Modal -->
+<div class="img-modal" id="imgModal" role="dialog" aria-modal="true" aria-label="Image preview">
+  <div class="img-modal-card">
+    <div class="img-modal-top">
+      <div class="cap" id="imgModalCap">Figure</div>
+      <button type="button" id="imgModalClose"><i class="bi bi-x-lg"></i> Close</button>
+    </div>
+    <div class="img-modal-body">
+      <img id="imgModalImg" alt="Expanded figure" />
+    </div>
+  </div>
+</div>
+
 <script>
+  function num(x){
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  }
+  function mean(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
+  function mae(y, yhat){ let s=0; for (let i=0;i<y.length;i++) s += Math.abs(y[i]-yhat[i]); return s/y.length; }
+  function rmse(y, yhat){ let s=0; for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; } return Math.sqrt(s/y.length); }
+  function mape(y, yhat){
+    let s=0, c=0;
+    for (let i=0;i<y.length;i++){
+      if (y[i] === 0) continue;
+      s += Math.abs((y[i]-yhat[i]) / y[i]);
+      c++;
+    }
+    return c ? (s/c)*100 : null;
+  }
+  function smape(y, yhat){
+    let s=0, c=0;
+    for (let i=0;i<y.length;i++){
+      const denom = (Math.abs(y[i])+Math.abs(yhat[i]));
+      if (denom === 0) continue;
+      s += 2*Math.abs(y[i]-yhat[i]) / denom;
+      c++;
+    }
+    return c ? (s/c)*100 : null;
+  }
+  function r2(y, yhat){
+    const ybar = mean(y);
+    let ssRes=0, ssTot=0;
+    for (let i=0;i<y.length;i++){
+      const e=y[i]-yhat[i]; ssRes += e*e;
+      const d=y[i]-ybar; ssTot += d*d;
+    }
+    return ssTot === 0 ? null : (1 - (ssRes/ssTot));
+  }
+  function percentile(arr, p){
+    const a = [...arr].sort((x,y)=>x-y);
+    const idx = (p/100)*(a.length-1);
+    const lo = Math.floor(idx), hi = Math.ceil(idx);
+    if (lo === hi) return a[lo];
+    const w = idx-lo;
+    return a[lo]*(1-w) + a[hi]*w;
+  }
+  function fmt(n){
+    if (n === null || n === undefined || Number.isNaN(n)) return "";
+    return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
+  }
+
+  // CSV parser that handles commas-less numeric csv (your file)
   function parseCSV(text){
     const lines = text.trim().split(/\r?\n/);
     const header = lines[0].split(",").map(s => s.trim());
@@ -228,93 +280,34 @@
     return rows;
   }
 
-  function num(x){
-    const n = Number(x);
-    return Number.isFinite(n) ? n : null;
-  }
-
-  function mean(arr){
-    return arr.reduce((a,b)=>a+b,0)/arr.length;
-  }
-
-  function mae(y, yhat){
-    let s=0; for (let i=0;i<y.length;i++) s += Math.abs(y[i]-yhat[i]);
-    return s/y.length;
-  }
-
-  function rmse(y, yhat){
-    let s=0; for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; }
-    return Math.sqrt(s/y.length);
-  }
-
-  function mape(y, yhat){
-    let s=0;
-    for (let i=0;i<y.length;i++){
-      s += Math.abs((y[i]-yhat[i]) / y[i]);
-    }
-    return (s/y.length)*100;
-  }
-
-  function smape(y, yhat){
-    let s=0;
-    for (let i=0;i<y.length;i++){
-      s += 2*Math.abs(y[i]-yhat[i]) / (Math.abs(y[i])+Math.abs(yhat[i]));
-    }
-    return (s/y.length)*100;
-  }
-
-  function r2(y, yhat){
-    const ybar = mean(y);
-    let ssRes=0, ssTot=0;
-    for (let i=0;i<y.length;i++){
-      const e=y[i]-yhat[i];
-      ssRes += e*e;
-      const d=y[i]-ybar;
-      ssTot += d*d;
-    }
-    return 1 - (ssRes/ssTot);
-  }
-
-  function percentile(arr, p){
-    const a = [...arr].sort((x,y)=>x-y);
-    const idx = (p/100)*(a.length-1);
-    const lo = Math.floor(idx), hi = Math.ceil(idx);
-    if (lo === hi) return a[lo];
-    const w = idx-lo;
-    return a[lo]*(1-w) + a[hi]*w;
-  }
-
-  function fmt(n){
-    if (n === null || n === undefined || Number.isNaN(n)) return "";
-    return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
-  }
-
   async function computeSarima(){
     const state = document.getElementById("mState");
     const table = document.getElementById("mTable");
     const body = document.getElementById("mBody");
 
     try{
-      const res = await fetch("./assets/data/sarima/sarima_forecasts.csv", { cache: "no-store" });
-      if (!res.ok) throw new Error("sarima_forecasts.csv not found");
+      const res = await fetch("../assets/data/sarima/sarima_forecasts.csv", { cache: "no-store" });
+      if (!res.ok) throw new Error("csv not found");
       const txt = await res.text();
       const rows = parseCSV(txt);
 
-      // Expect columns: actual, forecast (matches your uploaded file)
-      const y = rows.map(r => num(r.actual)).filter(v => v !== null);
-      const yhat = rows.map(r => num(r.forecast)).filter(v => v !== null);
-
-      const N = Math.min(y.length, yhat.length);
-      const yy = y.slice(0,N);
-      const yh = yhat.slice(0,N);
+      const yy = [];
+      const yh = [];
+      for (const r of rows){
+        const a = num(r.actual);
+        const p = num(r.forecast);
+        if (a === null || p === null) continue;
+        yy.push(a); yh.push(p);
+      }
+      if (!yy.length) throw new Error("no rows");
 
       const bias = mean(yy.map((v,i)=> v - yh[i]));
       const p90 = percentile(yy, 90);
 
-      const peakIdx = [];
-      for (let i=0;i<N;i++){ if (yy[i] >= p90) peakIdx.push(i); }
-      const yp = peakIdx.map(i=>yy[i]);
-      const yhp = peakIdx.map(i=>yh[i]);
+      const yp=[], yhp=[];
+      for (let i=0;i<yy.length;i++){
+        if (yy[i] >= p90){ yp.push(yy[i]); yhp.push(yh[i]); }
+      }
 
       const rowsOut = [
         ["Overall MAE", fmt(mae(yy,yh))],
@@ -329,7 +322,7 @@
         ["Peak MAPE (%)", fmt(mape(yp,yhp))],
         ["Peak sMAPE (%)", fmt(smape(yp,yhp))],
         ["Peak R²", fmt(r2(yp,yhp))],
-        ["Rows", fmt(N)],
+        ["Rows", fmt(yy.length)],
         ["Peak rows", fmt(yp.length)]
       ];
 
@@ -337,13 +330,39 @@
       state.style.display = "none";
       table.style.display = "table";
     }catch(e){
-      state.textContent = "Could not compute metrics. Check: ./assets/data/sarima/sarima_forecasts.csv";
+      state.textContent = "Could not compute SARIMA metrics. Ensure the forecasts CSV exists in assets/data/sarima.";
     }
   }
 
+  function initImageModal(){
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("imgModalImg");
+    const modalCap = document.getElementById("imgModalCap");
+    const closeBtn = document.getElementById("imgModalClose");
+
+    function open(src, cap){
+      modalImg.src = src;
+      modalCap.textContent = cap || "Figure";
+      modal.classList.add("open");
+    }
+    function close(){
+      modal.classList.remove("open");
+      modalImg.src = "";
+    }
+
+    document.querySelectorAll('img[data-modal="true"]').forEach((img) => {
+      img.addEventListener("click", () => open(img.getAttribute("src"), img.getAttribute("data-caption")));
+    });
+
+    closeBtn.addEventListener("click", close);
+    modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  }
+
   computeSarima();
+  initImageModal();
 </script>
 
-<script src="./assets/app.js"></script>
+<script src="../assets/app.js"></script>
 </body>
 </html>
