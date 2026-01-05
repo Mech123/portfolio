@@ -1,3 +1,4 @@
+<!-- pages/model_lstm.html (UPDATED) -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,7 +7,7 @@
   <title>LSTM – Model</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./assets/style.css" />
 
   <style>
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
@@ -14,30 +15,97 @@
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
       text-decoration:none; color: var(--text-main); background:#fff;
+      transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
     }
+    .tab:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); }
     .tab.active{ background: var(--primary); border-color: var(--primary); color:#fff; }
 
     .summary-box{
       border:1px solid var(--border);
       border-radius: 12px;
       background:#fff;
-      padding: 12px;
+      padding: 14px;
       margin-top: 12px;
     }
 
-    .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
-    @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
+    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid var(--border);
+      border-radius: 999px;
+      background:#fff;
+      color: var(--text-main);
+      text-decoration:none;
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .pill:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); border-color: rgba(0,0,0,.12); }
+    .pill i{ color: var(--primary); }
 
-    .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
-    .figure img { width:100%; height:auto; display:block; }
-    .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
-    .figcap .title { margin:0 0 6px 0; }
-    .figcap .desc { margin:0; color: var(--text-muted); }
+    .grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
+    @media (max-width: 980px){ .grid-2 { grid-template-columns: 1fr; } }
+
+    .panel{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+      padding: 14px;
+    }
 
     .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; }
     .metrics th, .metrics td { padding: 10px 12px; border-bottom:1px solid var(--border); text-align:left; }
     .metrics th { background:#f9fafb; }
     .metrics tr:last-child td { border-bottom:none; }
+
+    .kpi-grid{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+    @media (max-width: 980px){ .kpi-grid { grid-template-columns: 1fr; } }
+    .kpi{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+      padding: 12px 14px;
+    }
+    .kpi .label{ color: var(--text-muted); font-size: 12px; margin:0; }
+    .kpi .value{ font-size: 18px; font-weight: 700; margin: 4px 0 0; }
+
+    .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
+    @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
+    .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
+    .figure img { width:100%; height:auto; display:block; cursor: zoom-in; }
+    .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
+    .figcap .title { margin:0 0 6px 0; font-weight: 600; }
+    .figcap .desc { margin:0; color: var(--text-muted); }
+
+    /* Simple image modal */
+    .img-modal{
+      position:fixed; inset:0; background: rgba(0,0,0,.72);
+      display:none; align-items:center; justify-content:center;
+      padding: 22px; z-index: 9999;
+    }
+    .img-modal.open{ display:flex; }
+    .img-modal-card{
+      max-width: min(1100px, 96vw);
+      max-height: 92vh;
+      width: 100%;
+      background:#111827;
+      border-radius: 14px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 24px 80px rgba(0,0,0,.45);
+    }
+    .img-modal-top{
+      display:flex; align-items:center; justify-content:space-between;
+      padding: 10px 12px; color:#e5e7eb; gap:12px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .img-modal-top .cap{ font-size: 13px; color: #d1d5db; }
+    .img-modal-top button{
+      border:1px solid rgba(255,255,255,.18);
+      background: transparent; color:#fff; border-radius: 10px;
+      padding: 6px 10px; cursor:pointer;
+    }
+    .img-modal-body{ background:#0b1220; display:flex; align-items:center; justify-content:center; }
+    .img-modal-body img{ max-width: 100%; max-height: 82vh; width:auto; height:auto; display:block; }
   </style>
 </head>
 
@@ -56,7 +124,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -77,10 +145,11 @@
 </aside>
 
 <main class="content">
+  <!-- Header / Summary -->
   <section class="card">
-    <h1>LSTM</h1>
-    <p class="muted">
-      Neural network model learning nonlinear temporal dependencies from historical demand (and features where used).
+    <h1 style="margin:0;">LSTM</h1>
+    <p class="muted" style="margin-top:10px;">
+      Neural network model learning non-linear temporal dependencies from historical demand.
     </p>
 
     <div class="tabs">
@@ -90,73 +159,181 @@
       <a class="tab" href="model_ensemble.html"><i class="bi bi-diagram-2"></i> Ensemble</a>
     </div>
 
-    <div class="hero-actions" style="margin-top:12px;">
-      <a class="btn" href="../assets/data/lstm/metrics.json" target="_blank" rel="noopener">
+    <div class="pill-row">
+      <a class="pill" href="./assets/data/lstm/metrics.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Open metrics JSON
       </a>
-      <a class="btn" href="../assets/data/lstm/lstm_predictions.csv" target="_blank" rel="noopener">
+      <a class="pill" href="./assets/data/lstm/lstm_predictions.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Open predictions CSV
+      </a>
+      <a class="pill" href="./assets/data/lstm/best_model.h5" target="_blank" rel="noopener">
+        <i class="bi bi-box"></i> Model file (H5)
+      </a>
+      <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/lstm_model.ipynb" target="_blank" rel="noopener">
+        <i class="bi bi-journal-code"></i> Notebook (GitHub)
       </a>
     </div>
 
+    <!-- Notebook-derived paragraph (no extra assumptions; only what was in your notebook/code) -->
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Evaluation summary (from final_metrics_table_eval.csv)</h2>
-      <ul style="margin:0; padding-left:18px; color:var(--text-muted);">
-        <li>Overall MAE: 521.314</li>
-        <li>Overall RMSE: 674.659</li>
-        <li>Overall MAPE (%): 0.976</li>
-        <li>Overall sMAPE (%): 0.975</li>
-        <li>Peak MAE: 611.755 • Peak RMSE: 844.671</li>
-      </ul>
+      <h2 style="margin:0 0 8px;">Model summary (from your notebook implementation)</h2>
+      <p class="muted" style="margin:0;">
+        The LSTM uses a 24-step input sequence (hourly window). Input features are scaled with a RobustScaler and the
+        target is scaled with a MinMaxScaler. The network is defined as:
+        LSTM(64, return_sequences=True) → Dropout(0.2) → LSTM(32) → Dropout(0.2) → Dense(16, ReLU) → Dropout(0.2) → Dense(1).
+        Training uses Adam (learning_rate=0.001) with MSE loss and MAE metric, along with EarlyStopping, ReduceLROnPlateau,
+        and ModelCheckpoint callbacks.
+      </p>
     </div>
   </section>
 
+  <!-- Metrics -->
   <section class="card">
     <h2>Metrics</h2>
-    <div id="metricsState" class="muted">Loading metrics…</div>
-    <table class="metrics" id="metricsTable" style="display:none;">
-      <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-      <tbody id="metricsBody"></tbody>
-    </table>
+    <p class="muted" style="margin-top:6px;">
+      Values are loaded from <code>./assets/data/lstm/metrics.json</code> and computed from
+      <code>./assets/data/lstm/lstm_predictions.csv</code>.
+    </p>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3 style="margin:0 0 6px;">Computed from predictions CSV</h3>
+        <div id="csvState" class="muted">Loading CSV metrics…</div>
+
+        <div class="kpi-grid" id="csvKpis" style="display:none;">
+          <div class="kpi"><p class="label">Overall MAE</p><p class="value" id="kpiMaeAll">–</p></div>
+          <div class="kpi"><p class="label">Overall RMSE</p><p class="value" id="kpiRmseAll">–</p></div>
+          <div class="kpi"><p class="label">Peak MAE (is_peak=1)</p><p class="value" id="kpiMaePeak">–</p></div>
+          <div class="kpi"><p class="label">Peak RMSE (is_peak=1)</p><p class="value" id="kpiRmsePeak">–</p></div>
+        </div>
+
+        <table class="metrics" id="csvTable" style="display:none;">
+          <thead>
+            <tr><th>Metric</th><th>Value</th></tr>
+          </thead>
+          <tbody id="csvBody"></tbody>
+        </table>
+      </div>
+
+      <div class="panel">
+        <h3 style="margin:0 0 6px;">Loaded from metrics.json</h3>
+        <div id="metricsState" class="muted">Loading metrics…</div>
+
+        <table class="metrics" id="metricsTable" style="display:none;">
+          <thead>
+            <tr><th>Metric</th><th>Value</th></tr>
+          </thead>
+          <tbody id="metricsBody"></tbody>
+        </table>
+      </div>
+    </div>
   </section>
 
+  <!-- Figures -->
   <section class="card">
     <h2>Figures</h2>
     <p class="muted">Click any image to enlarge.</p>
 
     <div class="gallery">
       <div class="figure">
-        <img data-modal="true" data-caption="Training history (loss curves)"
-             alt="training_history"
-             src="../assets/images/models/lstm/training_history.png">
+        <img data-modal="true" data-caption="training_history.png" alt="training_history"
+             src="./assets/images/models/lstm/training_history.png">
         <div class="figcap">
           <p class="title">training_history.png</p>
-          <p class="desc">Training/validation loss across epochs.</p>
+          <p class="desc">Loss/metrics during training.</p>
         </div>
       </div>
 
       <div class="figure">
-        <img data-modal="true" data-caption="Predictions visualization"
-             alt="predictions_visualization"
-             src="../assets/images/models/lstm/predictions_visualization.png">
+        <img data-modal="true" data-caption="predictions_visualization.png" alt="predictions_visualization"
+             src="./assets/images/models/lstm/predictions_visualization.png">
         <div class="figcap">
           <p class="title">predictions_visualization.png</p>
-          <p class="desc">Actual vs predicted series.</p>
+          <p class="desc">Actual vs predicted behavior.</p>
         </div>
       </div>
     </div>
   </section>
 </main>
 
+<!-- Image Modal -->
+<div class="img-modal" id="imgModal" role="dialog" aria-modal="true" aria-label="Image preview">
+  <div class="img-modal-card">
+    <div class="img-modal-top">
+      <div class="cap" id="imgModalCap">Figure</div>
+      <button type="button" id="imgModalClose"><i class="bi bi-x-lg"></i> Close</button>
+    </div>
+    <div class="img-modal-body">
+      <img id="imgModalImg" alt="Expanded figure" />
+    </div>
+  </div>
+</div>
+
+<script src="./assets/app.js"></script>
+
 <script>
-  async function loadLstmMetrics() {
+  // -------- helpers --------
+  function toNum(x){
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  }
+  function fmt(x, d=3){
+    if (x === null || x === undefined) return "N/A";
+    if (!Number.isFinite(x)) return "N/A";
+    return x.toFixed(d);
+  }
+  function mae(y, yhat){
+    let s=0, c=0;
+    for (let i=0;i<y.length;i++){ s += Math.abs(y[i]-yhat[i]); c++; }
+    return c ? s/c : null;
+  }
+  function rmse(y, yhat){
+    let s=0, c=0;
+    for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; c++; }
+    return c ? Math.sqrt(s/c) : null;
+  }
+  function mape(y, yhat){
+    let s=0, c=0;
+    for (let i=0;i<y.length;i++){
+      const denom = Math.abs(y[i]);
+      if (denom === 0) continue;
+      s += Math.abs((y[i]-yhat[i]) / denom);
+      c++;
+    }
+    return c ? (s/c)*100 : null;
+  }
+  function smape(y, yhat){
+    let s=0, c=0;
+    for (let i=0;i<y.length;i++){
+      const denom = (Math.abs(y[i]) + Math.abs(yhat[i]));
+      if (denom === 0) continue;
+      s += (2*Math.abs(y[i]-yhat[i]) / denom);
+      c++;
+    }
+    return c ? (s/c)*100 : null;
+  }
+  function r2(y, yhat){
+    const n=y.length;
+    if (!n) return null;
+    const mean = y.reduce((a,b)=>a+b,0)/n;
+    let ssRes=0, ssTot=0;
+    for (let i=0;i<n;i++){
+      const e=y[i]-yhat[i]; ssRes += e*e;
+      const d=y[i]-mean; ssTot += d*d;
+    }
+    if (ssTot === 0) return null;
+    return 1 - (ssRes/ssTot);
+  }
+
+  // -------- load metrics.json --------
+  async function loadJsonMetrics(){
     const state = document.getElementById("metricsState");
     const table = document.getElementById("metricsTable");
     const body = document.getElementById("metricsBody");
 
-    try {
-      const res = await fetch("../assets/data/lstm/metrics.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("Metrics JSON not found");
+    try{
+      const res = await fetch("./assets/data/lstm/metrics.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("metrics.json not found");
       const data = await res.json();
 
       const rows = [];
@@ -168,13 +345,148 @@
       body.innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
       state.style.display = "none";
       table.style.display = "table";
-    } catch {
+    }catch(e){
       state.textContent = "Could not load metrics. Check: assets/data/lstm/metrics.json";
     }
   }
-  loadLstmMetrics();
-</script>
 
-<script src="../assets/app.js"></script>
+  // -------- load lstm_predictions.csv and compute overall + peak metrics --------
+  function parseCsv(text){
+    // Simple CSV parser (handles quoted fields)
+    const rows = [];
+    let i=0, field="", row=[], inQuotes=false;
+    while (i < text.length){
+      const ch = text[i];
+
+      if (inQuotes){
+        if (ch === '"' && text[i+1] === '"'){ field += '"'; i += 2; continue; }
+        if (ch === '"'){ inQuotes = false; i++; continue; }
+        field += ch; i++; continue;
+      } else {
+        if (ch === '"'){ inQuotes = true; i++; continue; }
+        if (ch === ','){ row.push(field); field=""; i++; continue; }
+        if (ch === '\n'){
+          row.push(field); field="";
+          // ignore empty last line
+          if (row.length > 1 || (row.length===1 && row[0].trim()!=="")) rows.push(row);
+          row=[]; i++; continue;
+        }
+        if (ch === '\r'){ i++; continue; }
+        field += ch; i++; continue;
+      }
+    }
+    if (field.length || row.length){
+      row.push(field);
+      if (row.length > 1 || (row.length===1 && row[0].trim()!=="")) rows.push(row);
+    }
+    return rows;
+  }
+
+  async function loadCsvMetrics(){
+    const state = document.getElementById("csvState");
+    const tbl = document.getElementById("csvTable");
+    const body = document.getElementById("csvBody");
+    const kpis = document.getElementById("csvKpis");
+
+    try{
+      const res = await fetch("./assets/data/lstm/lstm_predictions.csv", { cache: "no-store" });
+      if (!res.ok) throw new Error("lstm_predictions.csv not found");
+      const text = await res.text();
+
+      const rows = parseCsv(text);
+      const header = rows[0].map(h => h.trim());
+      const idxActual = header.indexOf("actual");
+      const idxPred   = header.indexOf("predicted");
+      const idxPeak   = header.indexOf("is_peak");
+
+      if (idxActual < 0 || idxPred < 0) throw new Error("Missing required columns: actual, predicted");
+
+      const data = rows.slice(1);
+      const yAll=[], yhatAll=[], yPeak=[], yhatPeak=[];
+
+      for (const r of data){
+        const a = toNum(r[idxActual]);
+        const p = toNum(r[idxPred]);
+        if (a === null || p === null) continue;
+
+        yAll.push(a); yhatAll.push(p);
+
+        const isPeak = (idxPeak >= 0) ? (String(r[idxPeak]).trim() === "1") : false;
+        if (isPeak){ yPeak.push(a); yhatPeak.push(p); }
+      }
+
+      const out = {
+        "Overall MAE": mae(yAll, yhatAll),
+        "Overall RMSE": rmse(yAll, yhatAll),
+        "Overall MAPE (%)": mape(yAll, yhatAll),
+        "Overall sMAPE (%)": smape(yAll, yhatAll),
+        "Overall R²": r2(yAll, yhatAll),
+        "Peak MAE (is_peak=1)": yPeak.length ? mae(yPeak, yhatPeak) : null,
+        "Peak RMSE (is_peak=1)": yPeak.length ? rmse(yPeak, yhatPeak) : null,
+        "Peak MAPE (%)": yPeak.length ? mape(yPeak, yhatPeak) : null,
+        "Peak sMAPE (%)": yPeak.length ? smape(yPeak, yhatPeak) : null,
+        "Peak R²": yPeak.length ? r2(yPeak, yhatPeak) : null,
+        "Rows used (overall)": yAll.length,
+        "Rows used (peak)": yPeak.length
+      };
+
+      // KPI cards
+      document.getElementById("kpiMaeAll").textContent  = fmt(out["Overall MAE"]);
+      document.getElementById("kpiRmseAll").textContent = fmt(out["Overall RMSE"]);
+      document.getElementById("kpiMaePeak").textContent = fmt(out["Peak MAE (is_peak=1)"]);
+      document.getElementById("kpiRmsePeak").textContent= fmt(out["Peak RMSE (is_peak=1)"]);
+
+      // Full table
+      const order = [
+        "Overall MAE","Overall RMSE","Overall MAPE (%)","Overall sMAPE (%)","Overall R²",
+        "Peak MAE (is_peak=1)","Peak RMSE (is_peak=1)","Peak MAPE (%)","Peak sMAPE (%)","Peak R²",
+        "Rows used (overall)","Rows used (peak)"
+      ];
+
+      body.innerHTML = order.map((k) => {
+        const v = out[k];
+        const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
+        return `<tr><td>${k}</td><td>${show}</td></tr>`;
+      }).join("");
+
+      state.style.display = "none";
+      kpis.style.display = "grid";
+      tbl.style.display = "table";
+    }catch(e){
+      state.textContent = "Could not load CSV metrics. Check: assets/data/lstm/lstm_predictions.csv";
+    }
+  }
+
+  // -------- image modal --------
+  function initImageModal(){
+    const modal = document.getElementById("imgModal");
+    const modalImg = document.getElementById("imgModalImg");
+    const modalCap = document.getElementById("imgModalCap");
+    const closeBtn = document.getElementById("imgModalClose");
+
+    function open(src, cap){
+      modalImg.src = src;
+      modalCap.textContent = cap || "Figure";
+      modal.classList.add("open");
+    }
+    function close(){
+      modal.classList.remove("open");
+      modalImg.src = "";
+    }
+
+    document.querySelectorAll('img[data-modal="true"]').forEach((img) => {
+      img.addEventListener("click", () => open(img.getAttribute("src"), img.getAttribute("data-caption")));
+    });
+
+    closeBtn.addEventListener("click", close);
+    modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  }
+
+  // Run
+  loadJsonMetrics();
+  loadCsvMetrics();
+  initImageModal();
+</script>
 </body>
 </html>

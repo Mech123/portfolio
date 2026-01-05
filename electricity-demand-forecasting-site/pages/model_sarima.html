@@ -6,7 +6,7 @@
   <title>SARIMA – Model</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/style.css" />
+  <link rel="stylesheet" href="./assets/style.css" />
 
   <style>
     .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
@@ -25,19 +25,18 @@
       margin-top: 12px;
     }
 
-    .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
-    @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
-
-    .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
-    .figure img { width:100%; height:auto; display:block; }
-    .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
-    .figcap .title { margin:0 0 6px 0; }
-    .figcap .desc { margin:0; color: var(--text-muted); }
-
     .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; }
     .metrics th, .metrics td { padding: 10px 12px; border-bottom:1px solid var(--border); text-align:left; }
     .metrics th { background:#f9fafb; }
     .metrics tr:last-child td { border-bottom:none; }
+
+    .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
+    @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
+    .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
+    .figure img { width:100%; height:auto; display:block; }
+    .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
+    .figcap .title { margin:0 0 6px 0; font-weight:700; }
+    .figcap .desc { margin:0; color: var(--text-muted); }
   </style>
 </head>
 
@@ -56,7 +55,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -79,8 +78,9 @@
 <main class="content">
   <section class="card">
     <h1>SARIMA</h1>
+
     <p class="muted">
-      Statistical baseline capturing trend and seasonality. This page loads metrics from JSON and shows SARIMA plots.
+      Statistical baseline capturing trend and seasonality.
     </p>
 
     <div class="tabs">
@@ -91,91 +91,259 @@
     </div>
 
     <div class="hero-actions" style="margin-top:12px;">
-      <a class="btn" href="../assets/data/sarima/sarima_metrics.json" target="_blank" rel="noopener">
+      <a class="btn" href="./assets/data/sarima/sarima_metrics.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Open metrics JSON
       </a>
-      <a class="btn" href="../assets/data/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
+      <a class="btn" href="./assets/data/sarima/sarima_forecasts.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Open forecasts CSV
+      </a>
+      <a class="btn" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/sarima_model.ipynb" target="_blank" rel="noopener">
+        <i class="bi bi-journal-code"></i> Notebook (GitHub)
       </a>
     </div>
 
+    <!-- Summary FIRST -->
     <div class="summary-box">
-      <h2 style="margin:0 0 8px;">Evaluation summary (from final_metrics_table_eval.csv)</h2>
-      <ul style="margin:0; padding-left:18px; color:var(--text-muted);">
-        <li>Overall MAE: 13,785.069</li>
-        <li>Overall RMSE: 15,502.139</li>
-        <li>Overall MAPE (%): 24.317</li>
-        <li>Overall sMAPE (%): 28.505</li>
-        <li>Peak MAE: 21,936.467 • Peak RMSE: 22,091.510</li>
-      </ul>
+      <h2 style="margin:0 0 8px;">Summary</h2>
+      <p class="muted" style="margin:0;">
+        SARIMA shows strong seasonality fitting but poor generalization when the test distribution shifts and during sharp peak events.
+        On the forecasts CSV, the model has a large positive bias (actual − forecast), meaning it tends to under-predict demand, and
+        peak-region fit degrades significantly.
+      </p>
     </div>
   </section>
 
+  <!-- Metrics SECOND (from SARIMA forecasts CSV, not from eval table) -->
   <section class="card">
-    <h2>Metrics</h2>
-    <div id="metricsState" class="muted">Loading metrics…</div>
-    <table class="metrics" id="metricsTable" style="display:none;">
+    <h2>Metrics (computed from sarima_forecasts.csv)</h2>
+    <p class="muted">Source: <code>./assets/data/sarima/sarima_forecasts.csv</code> (overall + peak at p90 threshold of actual).</p>
+
+    <div id="mState" class="muted">Computing…</div>
+
+    <table class="metrics" id="mTable" style="display:none;">
       <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-      <tbody id="metricsBody"></tbody>
+      <tbody id="mBody"></tbody>
     </table>
   </section>
 
+  <!-- Figures THIRD -->
   <section class="card">
     <h2>Figures</h2>
     <p class="muted">Click any image to enlarge.</p>
 
+    <!-- All 11 SARIMA screenshots in order (from your SARIMA figure set) -->
     <div class="gallery">
       <div class="figure">
-        <img data-modal="true" data-caption="Data shift analysis (train vs test)"
-             alt="00_data_shift_analysis"
-             src="../assets/images/models/sarima/00_data_shift_analysis.png">
-        <div class="figcap">
-          <p class="title">00_data_shift_analysis.png</p>
-          <p class="desc">Train/Test distribution & mean shift.</p>
-        </div>
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/00_data_shift_analysis.png">
+          <img src="./assets/images/models/sarima/00_data_shift_analysis.png" alt="00_data_shift_analysis">
+        </a>
+        <div class="figcap"><p class="title">00 – Data shift analysis</p><p class="desc">Train vs test distribution and drift checks.</p></div>
       </div>
 
       <div class="figure">
-        <img data-modal="true" data-caption="Forecasts vs actual"
-             alt="10_forecasts"
-             src="../assets/images/models/sarima/10_forecasts.png">
-        <div class="figcap">
-          <p class="title">10_forecasts.png</p>
-          <p class="desc">Full test forecast + zoomed segment.</p>
-        </div>
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/01_time_series_overview.png">
+          <img src="./assets/images/models/sarima/01_time_series_overview.png" alt="01_time_series_overview">
+        </a>
+        <div class="figcap"><p class="title">01 – Time series overview</p><p class="desc">Full series with train/test split.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/03_distribution_analysis.png">
+          <img src="./assets/images/models/sarima/03_distribution_analysis.png" alt="03_distribution_analysis">
+        </a>
+        <div class="figcap"><p class="title">03 – Distribution analysis</p><p class="desc">Load distribution and descriptive statistics.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/04_seasonal_decomposition.png">
+          <img src="./assets/images/models/sarima/04_seasonal_decomposition.png" alt="04_seasonal_decomposition">
+        </a>
+        <div class="figcap"><p class="title">04 – Seasonal decomposition</p><p class="desc">Trend/seasonal/residual components.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/05_seasonal_patterns.png">
+          <img src="./assets/images/models/sarima/05_seasonal_patterns.png" alt="05_seasonal_patterns">
+        </a>
+        <div class="figcap"><p class="title">05 – Seasonal patterns</p><p class="desc">Daily and weekly seasonality behaviour.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/06_differencing.png">
+          <img src="./assets/images/models/sarima/06_differencing.png" alt="06_differencing">
+        </a>
+        <div class="figcap"><p class="title">06 – Differencing</p><p class="desc">Stationarity preparation via differencing.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/07_acf_pacf_original.png">
+          <img src="./assets/images/models/sarima/07_acf_pacf_original.png" alt="07_acf_pacf_original">
+        </a>
+        <div class="figcap"><p class="title">07 – ACF / PACF</p><p class="desc">Autocorrelation diagnostics for SARIMA orders.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/09_residual_analysis.png">
+          <img src="./assets/images/models/sarima/09_residual_analysis.png" alt="09_residual_analysis">
+        </a>
+        <div class="figcap"><p class="title">09 – Residual analysis</p><p class="desc">Residual checks (normality/autocorrelation).</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/10_forecasts.png">
+          <img src="./assets/images/models/sarima/10_forecasts.png" alt="10_forecasts">
+        </a>
+        <div class="figcap"><p class="title">10 – Forecasts</p><p class="desc">Forecast vs actual (full and zoomed views).</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/11_forecast_scatter.png">
+          <img src="./assets/images/models/sarima/11_forecast_scatter.png" alt="11_forecast_scatter">
+        </a>
+        <div class="figcap"><p class="title">11 – Forecast scatter</p><p class="desc">Actual vs predicted scatter view.</p></div>
+      </div>
+
+      <div class="figure">
+        <a target="_blank" rel="noopener" href="./assets/images/models/sarima/12_error_analysis.png">
+          <img src="./assets/images/models/sarima/12_error_analysis.png" alt="12_error_analysis">
+        </a>
+        <div class="figcap"><p class="title">12 – Error analysis</p><p class="desc">Error distribution and peak-specific errors.</p></div>
       </div>
     </div>
   </section>
 </main>
 
 <script>
-  async function loadSarimaMetrics() {
-    const state = document.getElementById("metricsState");
-    const table = document.getElementById("metricsTable");
-    const body = document.getElementById("metricsBody");
+  function parseCSV(text){
+    const lines = text.trim().split(/\r?\n/);
+    const header = lines[0].split(",").map(s => s.trim());
+    const rows = [];
+    for (let i=1; i<lines.length; i++){
+      if (!lines[i].trim()) continue;
+      const cols = lines[i].split(",").map(s => s.trim());
+      const obj = {};
+      header.forEach((h, idx) => obj[h] = cols[idx]);
+      rows.push(obj);
+    }
+    return rows;
+  }
 
-    try {
-      const res = await fetch("../assets/data/sarima/sarima_metrics.json", { cache: "no-store" });
-      if (!res.ok) throw new Error("Metrics JSON not found");
-      const data = await res.json();
+  function num(x){
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  }
 
-      const rows = [];
-      Object.keys(data).forEach((k) => {
-        const v = data[k];
-        rows.push([k, (typeof v === "object") ? JSON.stringify(v) : String(v)]);
-      });
+  function mean(arr){
+    return arr.reduce((a,b)=>a+b,0)/arr.length;
+  }
 
-      body.innerHTML = rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
+  function mae(y, yhat){
+    let s=0; for (let i=0;i<y.length;i++) s += Math.abs(y[i]-yhat[i]);
+    return s/y.length;
+  }
+
+  function rmse(y, yhat){
+    let s=0; for (let i=0;i<y.length;i++){ const e=y[i]-yhat[i]; s += e*e; }
+    return Math.sqrt(s/y.length);
+  }
+
+  function mape(y, yhat){
+    let s=0;
+    for (let i=0;i<y.length;i++){
+      s += Math.abs((y[i]-yhat[i]) / y[i]);
+    }
+    return (s/y.length)*100;
+  }
+
+  function smape(y, yhat){
+    let s=0;
+    for (let i=0;i<y.length;i++){
+      s += 2*Math.abs(y[i]-yhat[i]) / (Math.abs(y[i])+Math.abs(yhat[i]));
+    }
+    return (s/y.length)*100;
+  }
+
+  function r2(y, yhat){
+    const ybar = mean(y);
+    let ssRes=0, ssTot=0;
+    for (let i=0;i<y.length;i++){
+      const e=y[i]-yhat[i];
+      ssRes += e*e;
+      const d=y[i]-ybar;
+      ssTot += d*d;
+    }
+    return 1 - (ssRes/ssTot);
+  }
+
+  function percentile(arr, p){
+    const a = [...arr].sort((x,y)=>x-y);
+    const idx = (p/100)*(a.length-1);
+    const lo = Math.floor(idx), hi = Math.ceil(idx);
+    if (lo === hi) return a[lo];
+    const w = idx-lo;
+    return a[lo]*(1-w) + a[hi]*w;
+  }
+
+  function fmt(n){
+    if (n === null || n === undefined || Number.isNaN(n)) return "";
+    return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
+  }
+
+  async function computeSarima(){
+    const state = document.getElementById("mState");
+    const table = document.getElementById("mTable");
+    const body = document.getElementById("mBody");
+
+    try{
+      const res = await fetch("./assets/data/sarima/sarima_forecasts.csv", { cache: "no-store" });
+      if (!res.ok) throw new Error("sarima_forecasts.csv not found");
+      const txt = await res.text();
+      const rows = parseCSV(txt);
+
+      // Expect columns: actual, forecast (matches your uploaded file)
+      const y = rows.map(r => num(r.actual)).filter(v => v !== null);
+      const yhat = rows.map(r => num(r.forecast)).filter(v => v !== null);
+
+      const N = Math.min(y.length, yhat.length);
+      const yy = y.slice(0,N);
+      const yh = yhat.slice(0,N);
+
+      const bias = mean(yy.map((v,i)=> v - yh[i]));
+      const p90 = percentile(yy, 90);
+
+      const peakIdx = [];
+      for (let i=0;i<N;i++){ if (yy[i] >= p90) peakIdx.push(i); }
+      const yp = peakIdx.map(i=>yy[i]);
+      const yhp = peakIdx.map(i=>yh[i]);
+
+      const rowsOut = [
+        ["Overall MAE", fmt(mae(yy,yh))],
+        ["Overall RMSE", fmt(rmse(yy,yh))],
+        ["Overall MAPE (%)", fmt(mape(yy,yh))],
+        ["Overall sMAPE (%)", fmt(smape(yy,yh))],
+        ["Overall R²", fmt(r2(yy,yh))],
+        ["Bias (mean actual − forecast)", fmt(bias)],
+        ["Peak threshold (p90 of actual)", fmt(p90)],
+        ["Peak MAE", fmt(mae(yp,yhp))],
+        ["Peak RMSE", fmt(rmse(yp,yhp))],
+        ["Peak MAPE (%)", fmt(mape(yp,yhp))],
+        ["Peak sMAPE (%)", fmt(smape(yp,yhp))],
+        ["Peak R²", fmt(r2(yp,yhp))],
+        ["Rows", fmt(N)],
+        ["Peak rows", fmt(yp.length)]
+      ];
+
+      body.innerHTML = rowsOut.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
       state.style.display = "none";
       table.style.display = "table";
-    } catch {
-      state.textContent = "Could not load metrics. Check: assets/data/sarima/sarima_metrics.json";
+    }catch(e){
+      state.textContent = "Could not compute metrics. Check: ./assets/data/sarima/sarima_forecasts.csv";
     }
   }
 
-  loadSarimaMetrics();
+  computeSarima();
 </script>
 
-<script src="../assets/app.js"></script>
+<script src="./assets/app.js"></script>
 </body>
 </html>

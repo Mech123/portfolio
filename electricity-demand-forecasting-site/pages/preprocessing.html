@@ -3,19 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pre Processing • Electricity Demand Forecasting (Germany)</title>
+  <title>Pre Processing</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
-
-  <style>
-    .kpis { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 12px; }
-    .kpi { border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; }
-    @media (max-width: 980px) { .kpis { grid-template-columns: 1fr; } }
-
-    .pipeline { margin: 0; padding-left: 18px; }
-    .pipeline li { margin: 6px 0; }
-  </style>
 </head>
 
 <body>
@@ -56,20 +47,18 @@
 <main class="content">
   <section class="card">
     <h1>Pre Processing</h1>
+
     <p class="muted">
-      This page summarizes the preprocessing pipeline used to prepare Germany electricity demand and weather features
-      for short-term load forecasting (SARIMA, LSTM, Hybrid, Ensemble).
+      This page summarizes the preprocessing pipeline used to prepare Germany electricity demand
+      and weather features for short-term load forecasting
+      (SARIMA, LSTM, Hybrid, Ensemble).
     </p>
 
-    <div class="hero-actions" style="margin-top:12px;">
-      <a class="btn primary" href="https://data.open-power-system-data.org/time_series/" target="_blank" rel="noopener">
-        <i class="bi bi-box-arrow-up-right"></i> Dataset source (OPSD)
-      </a>
-      <a class="btn" href="https://doi.org/10.25832/time_series/2020-10-06" target="_blank" rel="noopener">
-        <i class="bi bi-link-45deg"></i> DOI (2020-10-06)
-      </a>
-      <a class="btn" href="https://github.com/Mech123/dswp_group2/blob/main/preprocessing.ipynb" target="_blank" rel="noopener">
-        <i class="bi bi-journal-code"></i> Preprocessing notebook (GitHub)
+    <!-- KEEP ONLY THIS LINK -->
+    <div class="hero-actions">
+      <a class="btn" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/Preprocessing.ipynb"
+         target="_blank" rel="noopener">
+        <i class="bi bi-box-arrow-up-right"></i> Preprocessing notebook (GitHub)
       </a>
     </div>
   </section>
@@ -77,35 +66,36 @@
   <section class="card">
     <h2>Processed Dataset Summary (60min)</h2>
 
-    <div class="kpis">
+    <div class="kpi-grid">
       <div class="kpi">
-        <p class="muted" style="margin:0;">Rows</p>
-        <p style="margin:4px 0 0;">32,665</p>
+        <div class="kpi-label">Rows</div>
+        <div class="kpi-value">32,665</div>
       </div>
       <div class="kpi">
-        <p class="muted" style="margin:0;">Columns</p>
-        <p style="margin:4px 0 0;">96</p>
+        <div class="kpi-label">Columns</div>
+        <div class="kpi-value">96</div>
       </div>
       <div class="kpi">
-        <p class="muted" style="margin:0;">Missing values after preprocessing</p>
-        <p style="margin:4px 0 0;">0</p>
+        <div class="kpi-label">Missing values after preprocessing</div>
+        <div class="kpi-value">0</div>
       </div>
     </div>
 
-    <p class="muted" style="margin-top:12px;">
+    <p class="muted" style="margin-top:10px;">
       Time range (UTC): 2015-01-08 00:00:00 → 2018-09-30 00:00:00
     </p>
   </section>
 
   <section class="card">
     <h2>Pipeline Summary</h2>
-    <ol class="pipeline">
-      <li><b>Load data</b>: import OPSD time series and merge with weather variables.</li>
-      <li><b>Clean timestamps</b>: enforce hourly resolution and correct ordering.</li>
-      <li><b>Handle missing values</b>: fill gaps and ensure a continuous time index.</li>
-      <li><b>Calendar features</b>: hour/day/week/month, weekend indicators, holiday flags.</li>
-      <li><b>Weather feature preparation</b>: align weather to timestamps and standardize where needed.</li>
-      <li><b>Finalize dataset</b>: export processed 60-min dataset used by all models.</li>
+    <ol>
+      <li><b>Load data:</b> import OPSD time series and merge with weather variables.</li>
+      <li><b>Clean timestamps:</b> enforce hourly resolution and correct ordering.</li>
+      <li><b>Handle missing values:</b> fill gaps and ensure a continuous time index.</li>
+      <li><b>Calendar features:</b> hour/day/week/month, weekend indicators, holiday flags.</li>
+      <li><b>Weather alignment:</b> synchronize weather features with demand timestamps.</li>
+      <li><b>Scaling:</b> normalize features for neural network training.</li>
+      <li><b>Train/test split:</b> time-aware split to avoid leakage.</li>
     </ol>
   </section>
 </main>

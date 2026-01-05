@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dataset • Electricity Demand Forecasting (Germany)</title>
+  <title>Dataset</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
@@ -47,37 +47,38 @@
 <main class="content">
   <section class="card">
     <h1>Dataset</h1>
+
     <p class="muted">
-      We use the Open Power System Data (OPSD) Time Series dataset (Germany) as the primary source for electricity demand.
-      Weather variables are aligned to the same hourly timestamps (used for LSTM/Hybrid models).
+      We use the Open Power System Data (OPSD) Time Series dataset (Germany) as the primary source for
+      electricity demand. Weather variables are aligned to the same hourly timestamps (used for
+      LSTM / Hybrid models).
     </p>
 
-    <div class="hero-actions" style="margin-top:12px;">
-      <a class="btn primary" href="https://data.open-power-system-data.org/time_series/" target="_blank" rel="noopener">
+    <!-- KEEP ONLY THIS LINK -->
+    <div class="hero-actions">
+      <a class="btn" href="https://data.open-power-system-data.org/time_series/"
+         target="_blank" rel="noopener">
         <i class="bi bi-box-arrow-up-right"></i> Open dataset page
-      </a>
-      <a class="btn" href="https://doi.org/10.25832/time_series/2020-10-06" target="_blank" rel="noopener">
-        <i class="bi bi-link-45deg"></i> DOI (2020-10-06)
       </a>
     </div>
   </section>
 
   <section class="card">
     <h2>What we use</h2>
-    <ul style="margin:0; padding-left:18px;">
+    <ul>
       <li>Country: Germany</li>
       <li>Resolution: 60 minutes</li>
       <li>Target: Electricity load (MW)</li>
-      <li>Additional inputs: Calendar features + weather variables (for LSTM/Hybrid)</li>
+      <li>Additional inputs: Calendar features + weather variables (for LSTM / Hybrid)</li>
     </ul>
   </section>
 
   <section class="card">
     <h2>Notes on usage</h2>
-    <ul style="margin:0; padding-left:18px;">
+    <ul>
       <li>All timestamps are standardized to an hourly time index.</li>
       <li>Missing values are handled during preprocessing to ensure continuity.</li>
-      <li>Processed dataset is shared across SARIMA/LSTM/Hybrid/Ensemble for fair comparison.</li>
+      <li>Processed dataset is shared across SARIMA / LSTM / Hybrid / Ensemble for fair comparison.</li>
     </ul>
   </section>
 </main>
