@@ -66,11 +66,16 @@
     .cta-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; position: relative; z-index: 1; }
     .cta-row a.btn { margin:0; }
 
-    .table-wrap{ overflow:auto; border:1px solid var(--border); border-radius: 12px; background:#fff; }
+    .table-wrap{
+      overflow:auto;
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+    }
     table.metrics-wide{
       width: 100%;
       border-collapse: collapse;
-      min-width: 980px;
+      min-width: 1020px;
     }
     table.metrics-wide th, table.metrics-wide td{
       padding: 10px 12px;
@@ -87,6 +92,13 @@
     table.metrics-wide tr:last-child td{ border-bottom: none; }
 
     .muted-small{ color: var(--text-muted); font-size: 13px; }
+    .summary-box{
+      border:1px solid var(--border);
+      border-radius: 12px;
+      background:#fff;
+      padding: 14px;
+      margin-top: 12px;
+    }
   </style>
 </head>
 
@@ -183,18 +195,30 @@
         </div>
       </div>
     </div>
+
+    <div class="summary-box">
+      <h2 style="margin:0 0 8px;">Summary (based on evaluation table)</h2>
+      <p class="muted" style="margin:0;">
+        Based on the combined evaluation table, the best overall choice is FINAL_SWITCH_RESIDUAL because it has the
+        lowest overall errors (Overall_MAE 520.0, Overall_RMSE 672.2) with the highest overall fit (Overall_R² 0.9949),
+        narrowly outperforming plain LSTM (Overall_MAE 521.3, RMSE 674.7). If the main priority is peak-demand accuracy,
+        ENS_RESIDUAL_LSTM is the peak specialist (Peak_MAE 548.5, Peak_RMSE 707.8, Peak_R² 0.535), but it sacrifices
+        overall accuracy compared to LSTM/switching. SARIMA and HYBRID are not good here because they show extremely
+        large errors and strongly negative R² (they fail to track magnitude/peaks properly), and when these weak models
+        are included, simple ENS_MEAN/ENS_MEDIAN get dragged down and become much worse than LSTM. Ridge stacking
+        improves over naive averaging, but it still cannot fully handle the regime-dependent behavior (normal vs peak
+        hours) as effectively as the switching/residual strategy, while ENS_NNLS collapses to LSTM-level performance,
+        indicating the weight optimizer effectively trusts LSTM most.
+      </p>
+    </div>
   </section>
 
   <section class="card">
-    <h2>Overview metrics (evaluation)</h2>
-    <p class="muted-small">
-      Table is loaded from the uploaded evaluation CSV (no manual copy/paste in HTML).
-    </p>
+    <h2>Overview metrics (evaluation) – full table</h2>
+    <p class="muted-small">Embedded evaluation table (no CSV auto-loading).</p>
 
-    <div id="metricsState" class="muted">Loading metrics table…</div>
-
-    <div class="table-wrap" id="metricsWrap" style="display:none;">
-      <table class="metrics-wide" id="metricsTable">
+    <div class="table-wrap">
+      <table class="metrics-wide" aria-label="Evaluation metrics table">
         <thead>
           <tr>
             <th>Model</th>
@@ -210,77 +234,143 @@
             <th>Peak R²</th>
           </tr>
         </thead>
-        <tbody id="metricsBody"></tbody>
+
+        <tbody>
+          <tr>
+            <td><b>FINAL_SWITCH_RESIDUAL</b></td>
+            <td>520.004</td>
+            <td>672.238</td>
+            <td>0.974595</td>
+            <td>0.973073</td>
+            <td>0.994858</td>
+            <td>598.708</td>
+            <td>825.228</td>
+            <td>0.875923</td>
+            <td>0.882561</td>
+            <td>0.368196</td>
+          </tr>
+          <tr>
+            <td><b>LSTM</b></td>
+            <td>521.314</td>
+            <td>674.659</td>
+            <td>0.976412</td>
+            <td>0.974922</td>
+            <td>0.994821</td>
+            <td>611.755</td>
+            <td>844.671</td>
+            <td>0.894026</td>
+            <td>0.900979</td>
+            <td>0.338075</td>
+          </tr>
+          <tr>
+            <td><b>ENS_NNLS</b></td>
+            <td>521.314</td>
+            <td>674.659</td>
+            <td>0.976412</td>
+            <td>0.974922</td>
+            <td>0.994821</td>
+            <td>611.755</td>
+            <td>844.671</td>
+            <td>0.894026</td>
+            <td>0.900979</td>
+            <td>0.338075</td>
+          </tr>
+          <tr>
+            <td><b>ENS_RESIDUAL_LSTM</b></td>
+            <td>677.403</td>
+            <td>844.527</td>
+            <td>1.256350</td>
+            <td>1.257757</td>
+            <td>0.991878</td>
+            <td>548.478</td>
+            <td>707.845</td>
+            <td>0.807392</td>
+            <td>0.812104</td>
+            <td>0.535728</td>
+          </tr>
+          <tr>
+            <td><b>ENS_WEIGHTED_RIDGE</b></td>
+            <td>714.008</td>
+            <td>903.807</td>
+            <td>1.331670</td>
+            <td>1.329567</td>
+            <td>0.990700</td>
+            <td>599.624</td>
+            <td>771.685</td>
+            <td>0.885109</td>
+            <td>0.887545</td>
+            <td>0.448092</td>
+          </tr>
+          <tr>
+            <td><b>ENS_STACK_RIDGE</b></td>
+            <td>782.643</td>
+            <td>966.227</td>
+            <td>1.458580</td>
+            <td>1.461446</td>
+            <td>0.989381</td>
+            <td>884.647</td>
+            <td>1,027.087</td>
+            <td>1.295630</td>
+            <td>1.309887</td>
+            <td>0.022663</td>
+          </tr>
+          <tr>
+            <td><b>ENS_MEAN</b></td>
+            <td>12,038.994</td>
+            <td>13,022.653</td>
+            <td>22.141600</td>
+            <td>26.141533</td>
+            <td>-0.935416</td>
+            <td>17,730.677</td>
+            <td>17,849.006</td>
+            <td>25.917700</td>
+            <td>28.505041</td>
+            <td>-294.034713</td>
+          </tr>
+          <tr>
+            <td><b>ENS_MEDIAN</b></td>
+            <td>13,765.326</td>
+            <td>15,500.325</td>
+            <td>24.932400</td>
+            <td>30.522515</td>
+            <td>-1.740232</td>
+            <td>21,936.467</td>
+            <td>22,091.510</td>
+            <td>31.766900</td>
+            <td>34.999328</td>
+            <td>-450.714302</td>
+          </tr>
+          <tr>
+            <td><b>Hybrid</b></td>
+            <td>22,375.808</td>
+            <td>23,607.357</td>
+            <td>40.466200</td>
+            <td>51.852154</td>
+            <td>-5.358216</td>
+            <td>40,488.133</td>
+            <td>40,644.241</td>
+            <td>58.978700</td>
+            <td>63.357563</td>
+            <td>-1,581.471946</td>
+          </tr>
+          <tr>
+            <td><b>SARIMA</b></td>
+            <td>12,135.796</td>
+            <td>13,997.344</td>
+            <td>22.438000</td>
+            <td>28.175606</td>
+            <td>-0.211421</td>
+            <td>22,255.848</td>
+            <td>22,391.407</td>
+            <td>32.283100</td>
+            <td>36.141095</td>
+            <td>-463.148014</td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </section>
 </main>
-
-<script>
-  function toNum(x){
-    const n = Number(x);
-    return Number.isFinite(n) ? n : null;
-  }
-  function fmt(x){
-    const n = toNum(x);
-    if (n === null) return "";
-    return n.toLocaleString(undefined, { maximumFractionDigits: 3 });
-  }
-
-  // Robust-ish CSV for this numeric table (no quoted commas in your file)
-  function parseCSV(text){
-    const lines = text.trim().split(/\r?\n/);
-    const header = lines[0].split(",").map(s => s.trim());
-    const rows = [];
-    for (let i=1; i<lines.length; i++){
-      if (!lines[i].trim()) continue;
-      const cols = lines[i].split(",").map(s => s.trim());
-      const obj = {};
-      header.forEach((h, idx) => obj[h] = cols[idx]);
-      rows.push(obj);
-    }
-    return rows;
-  }
-
-  async function loadEvalTable(){
-    const state = document.getElementById("metricsState");
-    const wrap  = document.getElementById("metricsWrap");
-    const body  = document.getElementById("metricsBody");
-
-    try{
-      // IMPORTANT: pages/* must use ../assets
-      const res = await fetch("../assets/data/final_metrics_table_eval.csv", { cache: "no-store" });
-      if (!res.ok) throw new Error("csv not found");
-      const txt = await res.text();
-      const rows = parseCSV(txt);
-
-      // You asked: keep full table (including all ensemble variants)
-      body.innerHTML = rows.map(r => `
-        <tr>
-          <td><b>${(r.model || "").trim()}</b></td>
-          <td>${fmt(r["Overall_MAE"])}</td>
-          <td>${fmt(r["Overall_RMSE"])}</td>
-          <td>${fmt(r["Overall_MAPE(%)"])}</td>
-          <td>${fmt(r["Overall_sMAPE(%)"])}</td>
-          <td>${fmt(r["Overall_R2"])}</td>
-          <td>${fmt(r["Peak_MAE"])}</td>
-          <td>${fmt(r["Peak_RMSE"])}</td>
-          <td>${fmt(r["Peak_MAPE(%)"])}</td>
-          <td>${fmt(r["Peak_sMAPE(%)"])}</td>
-          <td>${fmt(r["Peak_R2"])}</td>
-        </tr>
-      `).join("");
-
-      state.style.display = "none";
-      wrap.style.display = "block";
-    }catch(e){
-      // No path/debug text
-      state.textContent = "Metrics table could not be loaded. Ensure the evaluation CSV exists in assets/data.";
-    }
-  }
-
-  loadEvalTable();
-</script>
 
 <script src="../assets/app.js"></script>
 </body>
