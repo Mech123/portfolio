@@ -6,7 +6,74 @@
   <title>Models & Results</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/style.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
+
+  <style>
+    .model-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:14px;
+      margin-top: 12px;
+    }
+    .model-card{
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      background:#fff;
+      text-decoration:none;
+      color:inherit;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .model-card:hover{ box-shadow: 0 10px 25px rgba(0,0,0,0.06); }
+    .model-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .model-name{
+      margin:0;
+      font-size: 18px;
+      font-weight: 700;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#f9fafb;
+      font-size:12px;
+      color: var(--text-muted);
+      width: fit-content;
+    }
+    .model-desc{ margin:0; color: var(--text-muted); line-height: 1.45; }
+    .model-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .btn-sm{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#fff;
+      text-decoration:none;
+      color:inherit;
+      font-size: 13px;
+    }
+    .btn-sm:hover{ background:#f9fafb; }
+  </style>
 </head>
 
 <body>
@@ -24,7 +91,7 @@
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="./index.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
     <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
@@ -48,42 +115,70 @@
   <section class="card">
     <h1>Models & Results</h1>
     <p class="muted">
-      Open each model page for its metrics (JSON), prediction outputs (CSV), and figures.
+      Each model has its own page with metrics (JSON), predictions (CSV), and plots (PNG).
+      Keeping model assets isolated avoids filename conflicts and makes the site easier to navigate.
     </p>
-  </section>
 
-  <section class="card">
-    <h2>Open Model Pages</h2>
-    <div class="hero-actions">
-      <a class="btn primary" href="model_sarima.html"><i class="bi bi-graph-up"></i> SARIMA</a>
-      <a class="btn primary" href="model_lstm.html"><i class="bi bi-cpu"></i> LSTM</a>
-      <a class="btn primary" href="model_hybrid.html"><i class="bi bi-layers"></i> Hybrid</a>
-      <a class="btn primary" href="model_ensemble.html"><i class="bi bi-diagram-2"></i> Ensemble</a>
+    <div class="model-grid">
+      <a class="model-card" href="model_sarima.html">
+        <div class="model-top">
+          <h2 class="model-name"><i class="bi bi-graph-up"></i> SARIMA</h2>
+          <span class="pill">Classical • Seasonal</span>
+        </div>
+        <p class="model-desc">
+          Seasonal ARIMA baseline for hourly demand forecasting. Strong at stable seasonality, weaker at sharp peaks.
+        </p>
+        <div class="model-actions">
+          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/sarima</span>
+          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/sarima</span>
+        </div>
+      </a>
+
+      <a class="model-card" href="model_lstm.html">
+        <div class="model-top">
+          <h2 class="model-name"><i class="bi bi-cpu"></i> LSTM</h2>
+          <span class="pill">Deep Learning</span>
+        </div>
+        <p class="model-desc">
+          Sequence model learning non-linear patterns from history. Includes training history and prediction plots.
+        </p>
+        <div class="model-actions">
+          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/lstm</span>
+          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/lstm</span>
+        </div>
+      </a>
+
+      <a class="model-card" href="model_hybrid.html">
+        <div class="model-top">
+          <h2 class="model-name"><i class="bi bi-layers"></i> Hybrid</h2>
+          <span class="pill">SARIMA + LSTM Residual</span>
+        </div>
+        <p class="model-desc">
+          Combines SARIMA base forecast with LSTM residual learning to improve peaks and regime changes.
+        </p>
+        <div class="model-actions">
+          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/hybrid</span>
+          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/hybrid</span>
+        </div>
+      </a>
+
+      <a class="model-card" href="model_ensemble.html">
+        <div class="model-top">
+          <h2 class="model-name"><i class="bi bi-diagram-3"></i> Ensemble</h2>
+          <span class="pill">Combination</span>
+        </div>
+        <p class="model-desc">
+          Aggregates predictions from multiple models (e.g., weighted combination) for robustness and stability.
+        </p>
+        <div class="model-actions">
+          <span class="btn-sm"><i class="bi bi-folder2-open"></i> assets/data/ensemble</span>
+          <span class="btn-sm"><i class="bi bi-image"></i> assets/images/models/ensemble</span>
+        </div>
+      </a>
     </div>
-  </section>
-
-  <section class="card">
-    <h2>Folder structure (recommended)</h2>
-    <p class="muted">
-      Keep each model fully isolated to avoid filename conflicts.
-    </p>
-    <pre style="white-space:pre-wrap;margin:0;">
-assets/
-  data/
-    sarima/    (sarima_metrics.json, sarima_forecasts.csv, ...)
-    lstm/      (metrics.json, lstm_predictions.csv, best_model.h5, ...)
-    hybrid/    (metrics_hybrid.json, hybrid_predictions.csv, best_residual_model.h5, ...)
-    ensemble/  (metrics_ensemble.json, ensemble_predictions.csv, ...)
-  images/
-    models/
-      sarima/   (00_data_shift_analysis.png, ...)
-      lstm/     (training_history.png, predictions_visualization.png)
-      hybrid/   (training_history_hybrid.png, ...)
-      ensemble/ (your ensemble plots)
-    </pre>
   </section>
 </main>
 
-<script src="./assets/app.js"></script>
+<script src="../assets/app.js"></script>
 </body>
 </html>
