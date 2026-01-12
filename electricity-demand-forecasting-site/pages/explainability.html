@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>References</title>
+  <title>Explainability | XAI</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
@@ -17,12 +17,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       border-bottom: 2px solid rgba(0, 120, 255, 0.1);
     }
-
-    .content {
-      padding-top: 112px;
-    }
-
-    /* Enhanced Header Styling */
+    .content { padding-top: 112px; }
     .topbar-center {
       font-size: 2em;
       font-weight: 700;
@@ -39,7 +34,6 @@
       text-transform: uppercase;
       transition: all 0.3s ease;
     }
-
     .topbar-center::before {
       content: '';
       position: absolute;
@@ -52,39 +46,11 @@
       opacity: 0.5;
       animation: shimmer-line 3s ease-in-out infinite;
     }
-
-    @keyframes shimmer-line {
-      0%, 100% {
-        opacity: 0.3;
-      }
-      50% {
-        opacity: 0.7;
-      }
-    }
-
-    /* Ensure hamburger button is clickable */
-    .icon-btn {
-      z-index: 1002;
-      position: relative;
-    }
-
-    /* Match background to header */
-    body {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    }
-
-    html {
-      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-    }
-
-    /* Logo styling */
-    .header-logo {
-      height: 150px;
-      width: auto;
-      margin-right: 1px;
-      margin-left: -10px;
-      object-fit: contain;
-    }
+    @keyframes shimmer-line { 0%,100%{opacity:0.3;} 50%{opacity:0.7;} }
+    .icon-btn { z-index: 1002; position: relative; }
+    body { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+    html { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+    .header-logo { height: 150px; width: auto; margin-right: 1px; margin-left: -10px; object-fit: contain; }
   </style>
 </head>
 
@@ -111,8 +77,8 @@
     <a class="nav-link" href="eda.html"><i class="bi bi-graph-up"></i> Exploratory Data Analysis</a>
     <a class="nav-link" href="features.html"><i class="bi bi-diagram-3"></i> Feature Engineering</a>
     <a class="nav-link" href="models.html"><i class="bi bi-cpu"></i> Models & Results</a>
-    <a class="nav-link" href="explainability.html"><i class="bi bi-lightbulb"></i> Explainability</a>
-    <a class="nav-link active" href="references.html"><i class="bi bi-book"></i> References</a>
+    <a class="nav-link active" href="explainability.html"><i class="bi bi-lightbulb"></i> Explainability</a>
+    <a class="nav-link" href="references.html"><i class="bi bi-book"></i> References</a>
 
     <div class="nav-divider"></div>
     <a class="nav-link" id="githubLink"><i class="bi bi-github"></i> Git Repository</a>
@@ -124,18 +90,12 @@
 </aside>
 
 <main class="content">
-  <section class="card">
-    <h1 style="font-weight: bold; font-size: 2.5em; text-align: center;">References</h1>
-    <ul>
-      <li>Akhtar, S., et al. (2023). Short-Term Load Forecasting Models: A Review of Challenges, Progress, and the Road Ahead. Energies.</li>
-      <li>Tzelepi, M., et al. (2023). Deep Learning for Energy Time-Series Analysis and Forecasting.</li>
-      <li>Aksöz, A., et al. (2024). Analysis of SARIMA Models for Forecasting Electricity Demand.</li>
-      <li>Qureshi, M., et al. (2024). Deep learning-based forecasting of electricity consumption.</li>
-      <li>Open Power System Data. Time Series (Version 2020-10-06). DOI: 10.25832/time_series/2020-10-06</li>
-    </ul>
+  <section class="card" style="text-align: center; padding: 40px 20px;">
+    <h1 style="font-weight: bold; font-size: 2.5em; text-align: center;">XAI</h1>
   </section>
 </main>
 
 <script src="../assets/app.js"></script>
 </body>
 </html>
+

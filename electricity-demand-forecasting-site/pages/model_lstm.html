@@ -85,33 +85,112 @@
     .img-modal-body{ background:#0b1220; display:flex; align-items:center; justify-content:center; }
     .img-modal-body img{ max-width: 100%; max-height: 82vh; width:auto; height:auto; display:block; }
   </style>
+
+  <style>
+    /* Header Styling */
+    .topbar {
+      height: 90px;
+      overflow: visible;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-bottom: 2px solid rgba(0, 120, 255, 0.1);
+    }
+
+    .content {
+      padding-top: 112px;
+    }
+
+    /* Enhanced Header Styling */
+    .topbar-center {
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #0078ff;
+      background: linear-gradient(135deg, #0078ff 0%, #3b82f6 50%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      display: inline-block;
+      padding: 8px 24px;
+      margin: 0 auto;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+
+    .topbar-center::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #0078ff, #3b82f6, #0078ff, transparent);
+      border-radius: 2px;
+      opacity: 0.5;
+      animation: shimmer-line 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer-line {
+      0%, 100% {
+        opacity: 0.3;
+      }
+      50% {
+        opacity: 0.7;
+      }
+    }
+
+    /* Ensure hamburger button is clickable */
+    .icon-btn {
+      z-index: 1002;
+      position: relative;
+    }
+
+    /* Match background to header */
+    body {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    html {
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    }
+
+    /* Logo styling */
+    .header-logo {
+      height: 150px;
+      width: auto;
+      margin-right: 1px;
+      margin-left: -10px;
+      object-fit: contain;
+    }
+  </style>
 </head>
 
 <body>
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
+    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
-  <div class="topbar-center">Electricity Demand Forecasting (Germany)</div>
+  <div class="topbar-center">EurGrid</div>
 </header>
 
 <aside class="sidebar">
   <div class="sidebar-brand">
     Electricity Demand Forecasting
-    <div class="brand-sub">Bathula Veera • Gagan • Pinky</div>
+    <div class="brand-sub">Bathula Veera • Gagan • Pinky Sherwani</div>
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
-    <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
     <a class="nav-link" href="eda.html"><i class="bi bi-graph-up"></i> Exploratory Data Analysis</a>
     <a class="nav-link" href="features.html"><i class="bi bi-diagram-3"></i> Feature Engineering</a>
     <a class="nav-link active" href="models.html"><i class="bi bi-cpu"></i> Models & Results</a>
-    <a class="nav-link" href="conclusion.html"><i class="bi bi-check-circle"></i> Conclusion</a>
+    <a class="nav-link" href="explainability.html"><i class="bi bi-lightbulb"></i> Explainability</a>
     <a class="nav-link" href="references.html"><i class="bi bi-book"></i> References</a>
-    <a class="nav-link" href="notebook.html"><i class="bi bi-terminal"></i> Process Notebook</a>
 
     <div class="nav-divider"></div>
     <a class="nav-link" id="githubLink"><i class="bi bi-github"></i> Git Repository</a>
@@ -137,13 +216,13 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="../assets/data/lstm/metrics.json" target="_blank" rel="noopener">
+      <a class="pill" href="../assets/outputs/lstm/metrics.json" target="_blank" rel="noopener">
         <i class="bi bi-braces"></i> Open metrics JSON
       </a>
-      <a class="pill" href="../assets/data/lstm/lstm_predictions.csv" target="_blank" rel="noopener">
+      <a class="pill" href="../assets/outputs/lstm/lstm_predictions.csv" target="_blank" rel="noopener">
         <i class="bi bi-table"></i> Open predictions CSV
       </a>
-      <a class="pill" href="../assets/data/lstm/best_model.h5" target="_blank" rel="noopener">
+      <a class="pill" href="../assets/outputs/lstm/best_model.h5" target="_blank" rel="noopener">
         <i class="bi bi-box"></i> Model file (H5)
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/lstm_model.ipynb" target="_blank" rel="noopener">
@@ -278,7 +357,7 @@
     const body = document.getElementById("metricsBody");
 
     try{
-      const res = await fetch("../assets/data/lstm/metrics.json", { cache: "no-store" });
+      const res = await fetch("../assets/outputs/lstm/metrics.json", { cache: "no-store" });
       if (!res.ok) throw new Error("json not found");
       const data = await res.json();
 
@@ -332,7 +411,7 @@
     const kpis = document.getElementById("csvKpis");
 
     try{
-      const res = await fetch("../assets/data/lstm/lstm_predictions.csv", { cache: "no-store" });
+      const res = await fetch("../assets/outputs/lstm/lstm_predictions.csv", { cache: "no-store" });
       if (!res.ok) throw new Error("csv not found");
       const text = await res.text();
 

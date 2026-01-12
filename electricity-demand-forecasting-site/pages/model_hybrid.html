@@ -3,31 +3,94 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hybrid – Model</title>
+  <title>Hybrid Model | SARIMA + LSTM Residual Correction</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
-    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 8px 0 0; }
+    /* Header Styling */
+    .topbar {
+      height: 90px;
+      overflow: visible;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      border-bottom: 2px solid rgba(0, 120, 255, 0.1);
+    }
+    .content { padding-top: 112px; }
+    .topbar-center {
+      font-size: 2em;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #0078ff;
+      background: linear-gradient(135deg, #0078ff 0%, #3b82f6 50%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      display: inline-block;
+      padding: 8px 24px;
+      margin: 0 auto;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+    }
+    .topbar-center::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 2px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #0078ff, #3b82f6, #0078ff, transparent);
+      border-radius: 2px;
+      opacity: 0.5;
+      animation: shimmer-line 3s ease-in-out infinite;
+    }
+    @keyframes shimmer-line { 0%,100%{opacity:0.3;} 50%{opacity:0.7;} }
+    .icon-btn { z-index: 1002; position: relative; }
+    body { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+    html { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+    .header-logo { height: 150px; width: auto; margin-right: 1px; margin-left: -10px; object-fit: contain; }
+
+    /* Dashboard layout */
+    .dash{
+      display:block;
+    }
+
+    /* KPI Grid */
+    .kpi-grid{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+    @media (max-width: 980px){ .kpi-grid{ grid-template-columns: 1fr; } }
+    .kpi{
+      border: 2px solid #3b82f6;
+      border-radius: 10px;
+      padding: 6px 8px;
+      background: rgba(255,255,255,0.25);
+    }
+    .kpi .label{ color: var(--text-muted); font-size: 14px; font-weight: 700; }
+    .kpi .value{ font-size: 16px; margin-top: 2px; }
+
+    /* Tabs */
+    .tabs { display:flex; flex-wrap:wrap; gap:8px; margin: 10px 0 0; justify-content:center; }
     .tab{
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px; border:1px solid var(--border); border-radius: 999px;
       text-decoration:none; color: var(--text-main); background:#fff;
       transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease, border-color .12s ease;
     }
-    .tab:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); }
+    .tab:hover{ 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3), 0 4px 12px rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+    }
     .tab.active{ background: var(--primary); border-color: var(--primary); color:#fff; }
 
-    .summary-box{
-      border:1px solid var(--border);
-      border-radius: 12px;
-      background:#fff;
-      padding: 14px;
-      margin-top: 12px;
-    }
-
-    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 10px; }
+    /* Pills */
+    .pill-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top: 12px; justify-content:center; }
     .pill{
       display:inline-flex; align-items:center; gap:8px;
       padding: 8px 10px;
@@ -38,52 +101,232 @@
       text-decoration:none;
       transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
-    .pill:hover{ transform: translateY(-1px); box-shadow: 0 8px 20px rgba(16,24,40,.08); border-color: rgba(0,0,0,.12); }
+    .pill:hover{ 
+      transform: translateY(-2px); 
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3), 0 4px 12px rgba(59, 130, 246, 0.15);
+      border-color: #3b82f6;
+    }
     .pill i{ color: var(--primary); }
 
-    .grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
-    @media (max-width: 980px){ .grid-2 { grid-template-columns: 1fr; } }
-
-    .panel{
+    /* Summary box */
+    .summary-box{
       border:1px solid var(--border);
-      border-radius: 12px;
-      background:#fff;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.35);
       padding: 14px;
+      margin-top: 14px;
+      text-align:left;
     }
 
-    .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; }
+    /* Metrics panels */
+    .grid-2{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
+    @media (max-width: 980px){ .grid-2 { grid-template-columns: 1fr; } }
+    .panel{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.35);
+      padding: 14px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+    }
+    .panel:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(59, 130, 246, 0.25), 0 6px 16px rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    .metrics { width:100%; border-collapse: collapse; margin-top: 10px; border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
     .metrics th, .metrics td { padding: 10px 12px; border-bottom:1px solid var(--border); text-align:left; }
     .metrics th { background:#f9fafb; }
     .metrics tr:last-child td { border-bottom:none; }
-
-    .kpi-grid{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
-    @media (max-width: 980px){ .kpi-grid { grid-template-columns: 1fr; } }
-    .kpi{
-      border:1px solid var(--border);
-      border-radius: 12px;
-      background:#fff;
-      padding: 12px 14px;
+    .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+    @media (max-width: 768px){ .metrics-grid { grid-template-columns: 1fr; } }
+    .metrics-col { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
+    .metrics-col-header { padding: 10px 12px; background:#f9fafb; font-weight: 700; border-bottom:1px solid var(--border); }
+    .metrics-col table { width:100%; border-collapse: collapse; }
+    .metrics-col table td { padding: 8px 12px; border-bottom:1px solid var(--border); }
+    .metrics-col table tr:last-child td { border-bottom:none; }
+    .directional-accuracy-card {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      background: rgba(59, 130, 246, 0.05);
+      text-align: center;
     }
-    .kpi .label{ color: var(--text-muted); font-size: 12px; margin:0; }
-    .kpi .value{ font-size: 18px; font-weight: 700; margin: 4px 0 0; }
+    .directional-accuracy-card .label {
+      font-size: 0.85em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .directional-accuracy-card .value {
+      font-size: 1.2em;
+      font-weight: 700;
+      color: #3b82f6;
+    }
 
-    .gallery { display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:14px; margin-top: 12px; }
-    @media (max-width: 980px){ .gallery { grid-template-columns: 1fr; } }
-    .figure { border:1px solid var(--border); border-radius: 10px; overflow:hidden; background:#fff; }
-    .figure img { width:100%; height:auto; display:block; cursor: zoom-in; }
-    .figcap { padding: 10px 12px; border-top:1px solid var(--border); }
-    .figcap .title { margin:0 0 6px 0; font-weight: 600; }
-    .figcap .desc { margin:0; color: var(--text-muted); }
+    /* Plot grid - modern cardplot style */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .cardplot{
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      border-radius: 16px;
+      overflow:hidden;
+      cursor:pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+      position: relative;
+    }
+    .cardplot::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.02) 0%, rgba(249, 250, 251, 0.5) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .cardplot:hover::before {
+      opacity: 1;
+    }
+    .cardplot:hover{
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 12px 32px rgba(0, 120, 255, 0.25), 0 6px 16px rgba(0, 120, 255, 0.15), 0 2px 4px rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 120, 255, 0.4);
+    }
+    @media (max-width: 1200px){
+      .grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px){
+      .grid{ grid-template-columns: 1fr; }
+    }
 
-    /* modal */
-    .img-modal{ position:fixed; inset:0; background: rgba(0,0,0,.72); display:none; align-items:center; justify-content:center; padding: 22px; z-index: 9999; }
-    .img-modal.open{ display:flex; }
-    .img-modal-card{ max-width: min(1100px, 96vw); max-height: 92vh; width: 100%; background:#111827; border-radius: 14px; overflow:hidden; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 24px 80px rgba(0,0,0,.45); }
-    .img-modal-top{ display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; color:#e5e7eb; gap:12px; border-bottom: 1px solid rgba(255,255,255,.10); }
-    .img-modal-top .cap{ font-size: 13px; color: #d1d5db; }
-    .img-modal-top button{ border:1px solid rgba(255,255,255,.18); background: transparent; color:#fff; border-radius: 10px; padding: 6px 10px; cursor:pointer; }
-    .img-modal-body{ background:#0b1220; display:flex; align-items:center; justify-content:center; }
-    .img-modal-body img{ max-width: 100%; max-height: 82vh; width:auto; height:auto; display:block; }
+    .cardplot-head{
+      padding: 16px 18px;
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #f3f4f6;
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.04) 0%, rgba(249, 250, 251, 0.8) 100%);
+      transition: all 0.3s ease;
+      position: relative;
+      z-index: 2;
+      text-align: left;
+    }
+    .cardplot:hover .cardplot-head{
+      background: linear-gradient(135deg, rgba(0, 120, 255, 0.08) 0%, rgba(239, 246, 255, 0.9) 100%);
+      border-bottom-color: rgba(0, 120, 255, 0.15);
+    }
+    .cardplot-title{ 
+      font-weight: 600; 
+      margin:0; 
+      font-size: 20px;
+      color: #111827;
+      letter-spacing: -0.01em;
+      transition: color 0.3s ease;
+      text-align: left;
+    }
+    .cardplot:hover .cardplot-title {
+      color: #0078ff;
+    }
+    .cardplot-sub{ 
+      color: #9ca3af; 
+      margin-top: 6px; 
+      line-height: 1.5; 
+      font-size: 14px;
+    }
+
+    .cardplot-body{ 
+      padding: 12px 14px 14px; 
+      position: relative;
+      z-index: 2;
+    }
+    .plot-img{
+      width: 100%;
+      height: auto;
+      display:block;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: #fff;
+      transition: transform 0.3s ease;
+    }
+    .cardplot:hover .plot-img {
+      transform: scale(1.02);
+    }
+
+    /* Enable hover on the main Hybrid Model section card */
+    section.card:first-of-type {
+      transition: all 0.3s ease;
+    }
+    section.card:first-of-type:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(59, 130, 246, 0.25), 0 6px 16px rgba(59, 130, 246, 0.15);
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
+    /* Modal */
+    .modal-overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,0.72);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:9999;
+    }
+    .modal-overlay.open{ display:flex; }
+    .modal{
+      width:min(1100px, 96vw);
+      max-height: 92vh;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.12);
+      background: rgba(20,24,32,0.96);
+      display:flex;
+      flex-direction:column;
+    }
+    .modal-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,0.10);
+    }
+    .modal-title{ opacity:0.95; font-weight: 700; color: #fff; }
+    .modal-actions{ display:flex; gap:8px; align-items:center; }
+    .icon-round{
+      width:38px; height:38px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      cursor:pointer;
+      color: #fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition: background 0.2s ease;
+    }
+    .icon-round:hover{ background: rgba(255,255,255,0.08); }
+    .modal-body{ overflow:auto; padding:14px; }
+    .modal-body img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .modal-cap{ margin-top:10px; opacity:0.9; color: #9ca3af; }
   </style>
 </head>
 
@@ -91,27 +334,27 @@
 <header class="topbar">
   <div class="topbar-left">
     <button class="icon-btn" aria-label="Menu"><i class="bi bi-list"></i></button>
+    <img src="../assets/images/logo.png" alt="EurGrid Logo" class="header-logo">
   </div>
-  <div class="topbar-center">Electricity Demand Forecasting (Germany)</div>
+  <div class="topbar-center">EurGrid</div>
 </header>
 
 <aside class="sidebar">
   <div class="sidebar-brand">
     Electricity Demand Forecasting
-    <div class="brand-sub">Bathula Veera • Gagan • Pinky</div>
+    <div class="brand-sub">Bathula Veera • Gagan • Pinky Sherwani</div>
   </div>
 
   <nav class="nav">
-    <a class="nav-link" href="../index.html"><i class="bi bi-house-door"></i> Home</a>
-    <a class="nav-link" href="related-work.html"><i class="bi bi-journal-text"></i> Related Work</a>
+    <a class="nav-link" href="../Short Term Electricity Demand Forecasting.html"><i class="bi bi-house-door"></i> Home</a>
+    <a class="nav-link" href="problem.html"><i class="bi bi-bullseye"></i> Understanding the Problem</a>
     <a class="nav-link" href="dataset.html"><i class="bi bi-database"></i> Dataset</a>
     <a class="nav-link" href="preprocessing.html"><i class="bi bi-sliders"></i> Pre Processing</a>
     <a class="nav-link" href="eda.html"><i class="bi bi-graph-up"></i> Exploratory Data Analysis</a>
     <a class="nav-link" href="features.html"><i class="bi bi-diagram-3"></i> Feature Engineering</a>
     <a class="nav-link active" href="models.html"><i class="bi bi-cpu"></i> Models & Results</a>
-    <a class="nav-link" href="conclusion.html"><i class="bi bi-check-circle"></i> Conclusion</a>
+    <a class="nav-link" href="explainability.html"><i class="bi bi-lightbulb"></i> Explainability</a>
     <a class="nav-link" href="references.html"><i class="bi bi-book"></i> References</a>
-    <a class="nav-link" href="notebook.html"><i class="bi bi-terminal"></i> Process Notebook</a>
 
     <div class="nav-divider"></div>
     <a class="nav-link" id="githubLink"><i class="bi bi-github"></i> Git Repository</a>
@@ -123,10 +366,17 @@
 </aside>
 
 <main class="content">
-  <section class="card">
-    <h1 style="margin:0;">Hybrid (SARIMA + LSTM residual)</h1>
-    <p class="muted" style="margin-top:10px;">
-      Hybrid model where SARIMA provides a baseline forecast and an LSTM learns residual errors.
+
+  <!-- HERO -->
+  <section class="card" style="text-align:center; position: relative;">
+    <img src="../assets/images/models/hybrid/hybrid.jpeg" alt="Hybrid Model" style="position: absolute; right: 20px; top: 18px; width: 300px; height: 260px; max-height: 1050px; border-radius: 8px; object-fit: contain; z-index: 1;">
+    <h1 style="font-weight: bold; font-size: 2.2em; text-align: center;">Hybrid Model</h1>
+    <p class="muted" style="font-size: 0.9em; text-align: center;">
+      SARIMA + LSTM Residual Correction
+    </p>
+    <p class="muted" style="font-size: 0.85em; text-align: center; margin-top: 8px;">
+      SARIMA provides a seasonal baseline and LSTM learns residual errors using a 24-hour window.<br>
+      Final predictions combine SARIMA baseline + Predicted residuals. Evaluated overall and at peak-load (p90).
     </p>
 
     <div class="tabs">
@@ -137,92 +387,152 @@
     </div>
 
     <div class="pill-row">
-      <a class="pill" href="../assets/data/hybrid/metrics_hybrid.json" target="_blank" rel="noopener">
-        <i class="bi bi-braces"></i> Open metrics JSON
+      <a class="pill" href="../assets/outputs/hybrid/metrics_hybrid.json" target="_blank" rel="noopener">
+        <i class="bi bi-braces"></i> Metrics JSON
       </a>
-      <a class="pill" href="../assets/data/hybrid/hybrid_predictions.csv" target="_blank" rel="noopener">
-        <i class="bi bi-table"></i> Open predictions CSV
+      <a class="pill" href="../assets/outputs/hybrid/hybrid_predictions.csv" target="_blank" rel="noopener">
+        <i class="bi bi-table"></i> Predictions CSV
       </a>
       <a class="pill" href="https://github.com/Mech123/dswp_group2/blob/main/Gagan/hybrid_model.ipynb" target="_blank" rel="noopener">
-        <i class="bi bi-journal-code"></i> Notebook (GitHub)
+        <i class="bi bi-journal-code"></i> Notebook
       </a>
     </div>
 
-    <div class="summary-box">
-      <p class="muted" style="margin:0;">
-        Hybrid SARIMA+LSTM is implemented as a two-stage residual-correction model for hourly electricity demand forecasting (Germany, 2015–2018). First, a univariate SARIMA(1,1,1)(1,1,1,24) model forecasts the target_load series using a strict time split (train: 2015–2017, test: 2018). Residuals (actual − SARIMA forecast) are then learned by a stacked LSTM using 24-hour sliding windows over the multivariate input features (scaled with RobustScaler) and residual target (scaled separately). The LSTM uses two recurrent layers (64 and 32 units) with dropout and dense layers, trained with Adam and stabilized using early stopping and learning-rate reduction. Final hybrid predictions are created by adding the predicted residuals back to the SARIMA baseline, and performance is evaluated with overall error metrics plus peak-load focused analysis using a 90th-percentile threshold.
-      </p>
+    <!-- KPIs computed from CSV -->
+    <div class="kpi-grid" id="csvKpis" style="display:none;">
+      <div class="kpi"><p class="label">Overall MAE</p><p class="value" id="kpiMaeAll">–</p></div>
+      <div class="kpi"><p class="label">Overall RMSE</p><p class="value" id="kpiRmseAll">–</p></div>
+      <div class="kpi"><p class="label">Peak MAE</p><p class="value" id="kpiMaePeak">–</p></div>
+      <div class="kpi"><p class="label">Peak RMSE</p><p class="value" id="kpiRmsePeak">–</p></div>
     </div>
+
+    <div id="csvState" class="muted" style="margin-top:10px;">Loading CSV metrics…</div>
   </section>
 
-  <section class="card">
-    <h2>Metrics</h2>
-   
-    <div class="grid-2">
-      <div class="panel">
-        <h3 style="margin:0 0 6px;">predictions</h3>
-        <div id="csvState" class="muted">Loading CSV metrics…</div>
+  <div class="dash">
 
-        <div class="kpi-grid" id="csvKpis" style="display:none;">
-          <div class="kpi"><p class="label">Overall MAE</p><p class="value" id="kpiMaeAll">–</p></div>
-          <div class="kpi"><p class="label">Overall RMSE</p><p class="value" id="kpiRmseAll">–</p></div>
-          <div class="kpi"><p class="label">Peak MAE</p><p class="value" id="kpiMaePeak">–</p></div>
-          <div class="kpi"><p class="label">Peak RMSE</p><p class="value" id="kpiRmsePeak">–</p></div>
+    <!-- LEFT: Metrics + Figures -->
+    <section class="card" style="text-align: center;">
+      <h2 style="font-weight: bold; font-size: 1.5em;">Metrics & Visualizations</h2>
+      <p class="muted">Click an image to zoom. Navigate between images using arrow buttons or keyboard.</p>
+
+      <div class="grid" style="margin-top: 20px;">
+
+        <!-- Training History -->
+        <div class="cardplot"
+             data-group="training"
+             data-title="Training History"
+             data-cap="Hybrid residual LSTM training history showing convergence and stability.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Training History</div>
+              <div class="cardplot-sub">Residual LSTM convergence and validation metrics</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/hybrid/training_history_hybrid.png"
+                 alt="Training history"
+                 data-modal="true"
+                 data-caption="Hybrid residual LSTM training history showing convergence and stability while learning residual corrections."/>
+          </div>
         </div>
 
-        <table class="metrics" id="csvTable" style="display:none;">
-          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-          <tbody id="csvBody"></tbody>
-        </table>
+        <!-- Predictions Visualization -->
+        <div class="cardplot"
+             data-group="predictions"
+             data-title="Actual vs Predicted"
+             data-cap="Hybrid model predictions compared to actual demand across test horizon.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Actual vs Predicted</div>
+              <div class="cardplot-sub">Baseline + Residual correction behavior</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/hybrid/predictions_visualization_hybrid.png"
+                 alt="Predictions visualization"
+                 data-modal="true"
+                 data-caption="Hybrid actual vs predicted visualization showing baseline + residual correction behavior across the test horizon."/>
+          </div>
+        </div>
+
+        <!-- Peak PR Curve -->
+        <div class="cardplot"
+             data-group="peak"
+             data-title="Peak Detection PR Curve"
+             data-cap="Precision-Recall tradeoff for peak-load detection comparing SARIMA vs Hybrid.">
+          <div class="cardplot-head">
+            <div>
+              <div class="cardplot-title">Peak Detection PR Curve</div>
+              <div class="cardplot-sub">Precision-Recall analysis for peak-load detection</div>
+            </div>
+          </div>
+          <div class="cardplot-body">
+            <img class="plot-img"
+                 src="../assets/images/models/hybrid/peak_pr_curve.png"
+                 alt="Peak PR Curve"
+                 data-modal="true"
+                 data-caption="Peak Detection Precision-Recall Curve comparing SARIMA and Hybrid models for peak-load detection (p90 threshold)."/>
+          </div>
+        </div>
+
       </div>
 
-      <div class="panel">
-        <h3 style="margin:0 0 6px;">metrics</h3>
-        <div id="metricsState" class="muted">Loading metrics…</div>
-
-        <table class="metrics" id="metricsTable" style="display:none;">
-          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
-          <tbody id="metricsBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
-  <section class="card">
-    <h2>Figures</h2>
-    <p class="muted">Click any image to enlarge.</p>
-
-    <!-- If you add hybrid plots later, keep file names consistent inside assets/images/models/hybrid/ -->
-    <div class="gallery">
-      <div class="figure">
-        <img data-modal="true" data-caption="training_history_hybrid.png" alt="training_history_hybrid"
-             src="../assets/images/models/hybrid/training_history_hybrid.png">
-        <div class="figcap">
-          <p class="title">training_history_hybrid.png</p>
-          <p class="desc">Hybrid residual LSTM training history.</p>
+      <div class="grid-2" style="margin-top: 20px;">
+        <div class="panel">
+          <h3 style="margin:0 0 6px; font-weight: bold;">Model Summary</h3>
+          <p class="muted" style="margin:0; font-size: 0.9em; text-align: left;">
+            The Hybrid SARIMA + LSTM model improves directional reliability by learning residual errors on top of a strong seasonal baseline, while preserving SARIMA’s stability.However, the model shows high absolute error, indicating that while it tracks demand trends and peaks well, it struggles with precise magnitude calibration during volatile load periods
+          </p>
+          <div class="directional-accuracy-card" id="directionalAccuracyCard" style="display:none;">
+            <div class="label">Directional Accuracy</div>
+            <div class="value" id="directionalAccuracyValue">–</div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3 style="margin:0 0 6px; font-weight: bold; font-size: 0.9em;">Computed Predictions</h3>
+          <div class="metrics-grid" id="csvTable" style="display:none;">
+            <div class="metrics-col">
+              <div class="metrics-col-header">Overall</div>
+              <table>
+                <tbody id="csvBodyOverall"></tbody>
+              </table>
+            </div>
+            <div class="metrics-col">
+              <div class="metrics-col-header">Peak</div>
+              <table>
+                <tbody id="csvBodyPeak"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="figure">
-        <img data-modal="true" data-caption="predictions_visualization_hybrid.png" alt="predictions_visualization_hybrid"
-             src="../assets/images/models/hybrid/predictions_visualization_hybrid.png">
-        <div class="figcap">
-          <p class="title">predictions_visualization_hybrid.png</p>
-          <p class="desc">Hybrid actual vs predicted visualization.</p>
-        </div>
+      <div class="hero-actions" style="justify-content:center; margin-top:20px;">
+        <a class="btn" href="models.html"><i class="bi bi-arrow-left"></i>Models</a>
+        <a class="btn primary" href="explainability.html"><i class="bi bi-arrow-right"></i> Explainability</a>
       </div>
-    </div>
-  </section>
+    </section>
+
+  </div>
 </main>
 
-<div class="img-modal" id="imgModal" role="dialog" aria-modal="true" aria-label="Image preview">
-  <div class="img-modal-card">
-    <div class="img-modal-top">
-      <div class="cap" id="imgModalCap">Figure</div>
-      <button type="button" id="imgModalClose"><i class="bi bi-x-lg"></i> Close</button>
+<!-- Modal -->
+<div class="modal-overlay" id="imgModal" aria-hidden="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Plot viewer">
+    <div class="modal-head">
+      <div class="modal-title" id="modalTitle">Plot</div>
+      <div class="modal-actions">
+        <button class="icon-round" id="prevBtn" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+        <button class="icon-round" id="nextBtn" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+        <button class="icon-round" id="closeBtn" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+      </div>
     </div>
-    <div class="img-modal-body">
-      <img id="imgModalImg" alt="Expanded figure" />
+    <div class="modal-body">
+      <img id="modalImg" alt="Expanded plot">
+      <div class="modal-cap" id="modalCap"></div>
     </div>
   </div>
 </div>
@@ -268,6 +578,20 @@
     if (ssTot === 0) return null;
     return 1 - (ssRes/ssTot);
   }
+  function directionalAccuracy(y, yhat){
+    if (y.length < 2 || yhat.length < 2) return null;
+    let correct = 0;
+    let total = 0;
+    for (let i=1; i<y.length; i++){
+      const actualDir = y[i] - y[i-1];
+      const predDir = yhat[i] - yhat[i-1];
+      if ((actualDir > 0 && predDir > 0) || (actualDir < 0 && predDir < 0) || (actualDir === 0 && predDir === 0)){
+        correct++;
+      }
+      total++;
+    }
+    return total > 0 ? (correct / total) * 100 : null;
+  }
 
   async function loadJsonMetrics(){
     const state = document.getElementById("metricsState");
@@ -275,7 +599,7 @@
     const body = document.getElementById("metricsBody");
 
     try{
-      const res = await fetch("../assets/data/hybrid/metrics_hybrid.json", { cache: "no-store" });
+      const res = await fetch("../assets/outputs/hybrid/metrics_hybrid.json", { cache: "no-store" });
       if (!res.ok) throw new Error("json not found");
       const data = await res.json();
 
@@ -300,7 +624,7 @@
     const kpis = document.getElementById("csvKpis");
 
     try{
-      const res = await fetch("../assets/data/hybrid/hybrid_predictions.csv", { cache: "no-store" });
+      const res = await fetch("../assets/outputs/hybrid/hybrid_predictions.csv", { cache: "no-store" });
       if (!res.ok) throw new Error("csv not found");
       const text = await res.text();
 
@@ -336,6 +660,7 @@
         "Overall MAPE (%)": mape(yAll, yhatAll),
         "Overall sMAPE (%)": smape(yAll, yhatAll),
         "Overall R²": r2(yAll, yhatAll),
+        "Directional Accuracy": directionalAccuracy(yAll, yhatAll),
         "Peak MAE": yPeak.length ? mae(yPeak, yhatPeak) : null,
         "Peak RMSE": yPeak.length ? rmse(yPeak, yhatPeak) : null,
         "Peak MAPE (%)": yPeak.length ? mape(yPeak, yhatPeak) : null,
@@ -350,54 +675,128 @@
       document.getElementById("kpiMaePeak").textContent = fmt(out["Peak MAE"]);
       document.getElementById("kpiRmsePeak").textContent= fmt(out["Peak RMSE"]);
 
-      const order = [
-        "Overall MAE","Overall RMSE","Overall MAPE (%)","Overall sMAPE (%)","Overall R²",
-        "Peak MAE","Peak RMSE","Peak MAPE (%)","Peak sMAPE (%)","Peak R²",
-        "Rows used (overall)","Rows used (peak)"
-      ];
+      // Display Directional Accuracy in summary card
+      const dirAcc = out["Directional Accuracy"];
+      if (dirAcc !== null && dirAcc !== undefined) {
+        document.getElementById("directionalAccuracyValue").textContent = fmt(dirAcc, 2) + "%";
+        document.getElementById("directionalAccuracyCard").style.display = "block";
+      }
 
-      body.innerHTML = order.map((k) => {
+      // Overall metrics
+      const overallOrder = [
+        "Overall MAE",
+        "Overall RMSE",
+        "Overall MAPE (%)",
+        "Overall sMAPE (%)",
+        "Overall R²"
+      ];
+      const overallBody = document.getElementById("csvBodyOverall");
+      overallBody.innerHTML = overallOrder.map((k) => {
         const v = out[k];
         const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
-        return `<tr><td>${k}</td><td>${show}</td></tr>`;
+        const metricName = k.replace("Overall ", "");
+        const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
+        const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
+        return `<tr><td>${metricName}</td>${valueCell}</tr>`;
+      }).join("");
+
+      // Peak metrics
+      const peakOrder = [
+        "Peak MAE",
+        "Peak RMSE",
+        "Peak MAPE (%)",
+        "Peak sMAPE (%)",
+        "Peak R²"
+      ];
+      const peakBody = document.getElementById("csvBodyPeak");
+      peakBody.innerHTML = peakOrder.map((k) => {
+        const v = out[k];
+        const show = (typeof v === "number") ? (Number.isInteger(v) ? String(v) : fmt(v)) : "N/A";
+        const metricName = k.replace("Peak ", "");
+        const isBold = metricName.includes("MAE") || metricName.includes("RMSE") || metricName.includes("R²");
+        const valueCell = isBold ? `<td style="font-weight: bold;">${show}</td>` : `<td>${show}</td>`;
+        return `<tr><td>${metricName}</td>${valueCell}</tr>`;
       }).join("");
 
       state.style.display = "none";
       kpis.style.display = "grid";
-      tbl.style.display = "table";
+      tbl.style.display = "grid";
     }catch(e){
       state.textContent = "Could not compute Hybrid metrics from CSV.";
     }
   }
 
-  function initImageModal(){
-    const modal = document.getElementById("imgModal");
-    const modalImg = document.getElementById("imgModalImg");
-    const modalCap = document.getElementById("imgModalCap");
-    const closeBtn = document.getElementById("imgModalClose");
+  // Modal setup with navigation
+  const modal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalCap = document.getElementById('modalCap');
+  const closeBtn = document.getElementById('closeBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
 
-    function open(src, cap){
-      modalImg.src = src;
-      modalCap.textContent = cap || "Figure";
-      modal.classList.add("open");
-    }
-    function close(){
-      modal.classList.remove("open");
-      modalImg.src = "";
-    }
+  let visibleCards = [];
+  let currentIndex = 0;
 
-    document.querySelectorAll('img[data-modal="true"]').forEach((img) => {
-      img.addEventListener("click", () => open(img.getAttribute("src"), img.getAttribute("data-caption")));
-    });
-
-    closeBtn.addEventListener("click", close);
-    modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  function refreshVisibleCards(){
+    visibleCards = Array.from(document.querySelectorAll('.cardplot'));
   }
+
+  function openModalByIndex(i){
+    refreshVisibleCards();
+    currentIndex = Math.max(0, Math.min(i, visibleCards.length - 1));
+    const c = visibleCards[currentIndex];
+    const img = c.querySelector('img[data-modal="true"]');
+    if (img) {
+      modalImg.src = img.getAttribute('src');
+      modalTitle.textContent = c.dataset.title || 'Plot';
+      modalCap.textContent = img.getAttribute('data-caption') || c.dataset.cap || '';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+  }
+  function closeModal(){
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    modalImg.src = '';
+  }
+  function nextImg(){ 
+    refreshVisibleCards();
+    if (visibleCards.length > 0) {
+      openModalByIndex((currentIndex + 1) % visibleCards.length); 
+    }
+  }
+  function prevImg(){ 
+    refreshVisibleCards();
+    if (visibleCards.length > 0) {
+      openModalByIndex((currentIndex - 1 + visibleCards.length) % visibleCards.length); 
+    }
+  }
+
+  document.querySelectorAll('.cardplot img[data-modal="true"]').forEach((img, idx) => {
+    img.style.cursor = "zoom-in";
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const card = img.closest('.cardplot');
+      const cardIndex = Array.from(document.querySelectorAll('.cardplot')).indexOf(card);
+      openModalByIndex(cardIndex);
+    });
+  });
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (nextBtn) nextBtn.addEventListener('click', nextImg);
+  if (prevBtn) prevBtn.addEventListener('click', prevImg);
+  if (modal) modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (!modal || !modal.classList.contains('open')) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowRight') nextImg();
+    if (e.key === 'ArrowLeft') prevImg();
+  });
 
   loadJsonMetrics();
   loadCsvMetrics();
-  initImageModal();
 </script>
 
 <script src="../assets/app.js"></script>
