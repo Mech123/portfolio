@@ -6,7 +6,7 @@
   <title>Ensemble Models — Grid Guardian</title>
 
   <!-- Global site CSS -->
-  <link rel="stylesheet" href="../assests/style.css" />
+  <link rel="stylesheet" href="../assets/style.css" />
 
   <style>
     /* Page-specific (minimal) */
@@ -281,9 +281,8 @@
 
           <!-- Links (adjust if your repo stores these elsewhere) -->
           <div class="pillRow">
-            <a class="pill" href="../assests/outputs/ensemble/ensemble_comparison_table.csv" target="_blank" rel="noopener">📄 Metrics CSV</a>
-            <a class="pill" href="../assests/outputs/ensemble/final_switch_residual_predictions.csv" target="_blank" rel="noopener">📈 Predictions CSV</a>
-            <a class="pill" href="../assests/outputs/ensemble/ensemble.ipynb" target="_blank" rel="noopener">📒 Notebook</a>
+            <a class="pill" href="../assets/outputs/ensemble/ensemble_comparison_table.csv" target="_blank" rel="noopener">📄 Metrics CSV</a>
+            <a class="pill" href="../assets/outputs/ensemble/final_switch_residual_predictions.csv" target="_blank" rel="noopener">📈 Predictions CSV</a>
           </div>
 
           <!-- KPIs filled from ensemble_comparison_table.csv -->
@@ -318,7 +317,7 @@
         <!-- Hero image (uses your ensemble folder + correct filename) -->
         <div class="heroImage">
           <div class="badge">Ensemble Overview</div>
-          <img src="../assests/images/models/ensemble/01_actual_vs_predictions_full.png" alt="Ensemble overview" />
+          <img src="../assets/images/models/ensemble/01_actual_vs_predictions_full.png" alt="Ensemble overview" />
         </div>
 
       </div>
@@ -349,48 +348,48 @@
 
       <div class="plotGrid" id="plotGrid">
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/01_actual_vs_predictions_full.png">
-          <img src="../assests/images/models/ensemble/01_actual_vs_predictions_full.png" alt="Eval: Actual vs Key Models" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/01_actual_vs_predictions_full.png">
+          <img src="../assets/images/models/ensemble/01_actual_vs_predictions_full.png" alt="Eval: Actual vs Key Models" />
           <div class="cap">
             <h4>Actual vs Key Models</h4>
             <p>All models track cycles; differences show up at ramps and peaks.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/02_eval_absolute_error_cdf.png">
-          <img src="../assests/images/models/ensemble/02_eval_absolute_error_cdf.png" alt="Eval Absolute Error CDF" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/02_eval_absolute_error_cdf.png">
+          <img src="../assets/images/models/ensemble/02_eval_absolute_error_cdf.png" alt="Eval Absolute Error CDF" />
           <div class="cap">
             <h4>Absolute Error CDF</h4>
             <p>Tail-risk view: how often are we “dangerously wrong”?</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png">
-          <img src="../assests/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png" alt="Tuned final-switch vs LSTM" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png">
+          <img src="../assets/images/models/ensemble/04_tuned_final_switch_vs_lstm_full.png" alt="Tuned final-switch vs LSTM" />
           <div class="cap">
             <h4>Tuned Final-Switch vs LSTM</h4>
             <p>Triggered points highlighted: switching happens when it matters.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/05_Overall_vs_Peak__comparision.png">
-          <img src="../assests/images/models/ensemble/05_Overall_vs_Peak__comparision.png" alt="Overall vs Peak MAE" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/05_Overall_vs_Peak__comparision.png">
+          <img src="../assets/images/models/ensemble/05_Overall_vs_Peak__comparision.png" alt="Overall vs Peak MAE" />
           <div class="cap">
             <h4>Overall vs Peak MAE</h4>
             <p>Average performance can hide peak-hour failures.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/06_triggered_peaks_error_improvement.png">
-          <img src="../assests/images/models/ensemble/06_triggered_peaks_error_improvement.png" alt="Triggered peaks error improvement" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/06_triggered_peaks_error_improvement.png">
+          <img src="../assets/images/models/ensemble/06_triggered_peaks_error_improvement.png" alt="Triggered peaks error improvement" />
           <div class="cap">
             <h4>Triggered Peaks: Error Improvement</h4>
             <p>Positive bars = the switch reduces error vs LSTM.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/03_peak_detection_pr_curve.png">
-          <img src="../assests/images/models/ensemble/03_peak_detection_pr_curve.png" alt="Peak detection PR curve" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/03_peak_detection_pr_curve.png">
+          <img src="../assets/images/models/ensemble/03_peak_detection_pr_curve.png" alt="Peak detection PR curve" />
           <div class="cap">
             <h4>Peak Detection (PR Curve)</h4>
             <p>How well triggered points match true peaks (precision vs recall).</p>
@@ -408,48 +407,48 @@
 
       <div class="plotGrid">
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/01_shap_ens_mean.png">
-          <img src="../assests/images/models/ensemble/01_shap_ens_mean.png" alt="SHAP ens_mean" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/01_shap_ens_mean.png">
+          <img src="../assets/images/models/ensemble/01_shap_ens_mean.png" alt="SHAP ens_mean" />
           <div class="cap">
             <h4>SHAP: ens_mean</h4>
             <p>Averaging is fair — but not peak-intelligent.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/05_shap_ens_median.png">
-          <img src="../assests/images/models/ensemble/05_shap_ens_median.png" alt="SHAP ens_median" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/05_shap_ens_median.png">
+          <img src="../assets/images/models/ensemble/05_shap_ens_median.png" alt="SHAP ens_median" />
           <div class="cap">
             <h4>SHAP: ens_median</h4>
             <p>Median can be conservative (often SARIMA-dominated).</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/02_shap_ens_nnls.png">
-          <img src="../assests/images/models/ensemble/02_shap_ens_nnls.png" alt="SHAP ens_nnls" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/02_shap_ens_nnls.png">
+          <img src="../assets/images/models/ensemble/02_shap_ens_nnls.png" alt="SHAP ens_nnls" />
           <div class="cap">
             <h4>SHAP: ens_nnls</h4>
             <p>NNLS may collapse to one model (often LSTM).</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/02_shap_ens_stack_ridge.png">
-          <img src="../assests/images/models/ensemble/02_shap_ens_stack_ridge.png" alt="SHAP ens_stack_ridge" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/02_shap_ens_stack_ridge.png">
+          <img src="../assets/images/models/ensemble/02_shap_ens_stack_ridge.png" alt="SHAP ens_stack_ridge" />
           <div class="cap">
             <h4>SHAP: ens_stack_ridge</h4>
             <p>Stacking: LSTM leads; others correct in specific regimes.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/03_shap_ens_weighted_ridge.png">
-          <img src="../assests/images/models/ensemble/03_shap_ens_weighted_ridge.png" alt="SHAP ens_weighted_ridge" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/03_shap_ens_weighted_ridge.png">
+          <img src="../assets/images/models/ensemble/03_shap_ens_weighted_ridge.png" alt="SHAP ens_weighted_ridge" />
           <div class="cap">
             <h4>SHAP: ens_weighted_ridge</h4>
             <p>More conservative weighting → smoother behavior.</p>
           </div>
         </div>
 
-        <div class="cardplot" data-full="../assests/images/models/ensemble/06_residual_corrector.png">
-          <img src="../assests/images/models/ensemble/06_residual_corrector.png" alt="SHAP residual corrector" />
+        <div class="cardplot" data-full="../assets/images/models/ensemble/06_residual_corrector.png">
+          <img src="../assets/images/models/ensemble/06_residual_corrector.png" alt="SHAP residual corrector" />
           <div class="cap">
             <h4>SHAP: Residual Corrector g(.)</h4>
             <p>Global + local explanation for peak-time correction decisions.</p>
@@ -509,7 +508,7 @@
   </div>
 
   <!-- Global JS (sidebar toggle, github link, year) -->
-  <script src="../assests/app.js"></script>
+  <script src="../assets/app.js"></script>
 
   <script>
     // ===== Utilities =====
@@ -579,7 +578,7 @@
 
     // ===== Load comparison CSV and populate KPIs + table =====
     async function loadComparison(){
-      const url = "../assests/outputs/ensemble/ensemble_comparison_table.csv";
+      const url = "../assets/outputs/ensemble/ensemble_comparison_table.csv";
       const res = await fetch(url);
       if (!res.ok) throw new Error("Failed to load " + url);
 
@@ -668,7 +667,7 @@
       console.error(err);
       const tbody = document.querySelector("#comparisonTable tbody");
       tbody.innerHTML = `<tr><td colspan="10" style="padding:14px; color: rgba(255,255,255,0.75);">
-        Could not load <code>../assests/outputs/ensemble/ensemble_comparison_table.csv</code>.<br/>
+        Could not load <code>../assets/outputs/ensemble/ensemble_comparison_table.csv</code>.<br/>
         Please verify the CSV path and file name.
       </td></tr>`;
     });
